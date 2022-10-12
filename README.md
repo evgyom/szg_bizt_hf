@@ -73,6 +73,7 @@ CIA és AAA alapján követelménye lista:
 Adatfolyam ábra
 
 ### Támadó modell kidolgozása
+
 * Spoofing:
     * Social engineering of admins  --> awareness campaign
     * User admin funkciókat próbál elérni --> megfelelő access control logika
@@ -125,6 +126,13 @@ Adatfolyam ábra
 * Admin feladatok
     * Adat módosítás
 
+## Tesztelési terv
+
+* Mindentre code revirew és static analyzer
+* Parserre fuzzolás
+* Ha Flask lesz a backend: https://www.securecoding.com/blog/penetration-testing-in-flask-application/
+* Manuális tesztelés
+
 # Kérdések:
 * Pénz kell?
 * Bejelentkezési lib szabad-e?
@@ -132,7 +140,7 @@ Adatfolyam ábra
 # Feladatok:
 * Árpi: 
     * Komponens diagram
-    * Architektúra tervek szövege
+    * Architektúra tervek szövege -> minden interfészről 1-2 mondat
 * Heni:
     * Use case diagram 
     * Funkcionális követelmények
@@ -142,3 +150,9 @@ Adatfolyam ábra
 * Misi:
     * Adatfolyam diagram
     * CAFF parser veszélyei
+    * Támadómodellek kirészletezése
+    * Biztonsági követelményekből szövegalkotás
+
+# Megjegyzések
+
+Komponensdiagramban a parser legyen egy külön komponens a CAFF Áruházon kívül

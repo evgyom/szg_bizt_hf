@@ -15,7 +15,8 @@ Követelmények:
         * CAFF feltöltése
             * Nevet, árat adni
         * Felhasználói adatok módosítása
-        * (saját CAFF-ok kezelése)
+            * Fiók törlése (összes CAFF törlése)
+        * saját CAFF-ok kezelése
             * törlés
             * ár/név változtatás
 * Admin user
@@ -23,42 +24,55 @@ Követelmények:
     * User kezelés
         * törlés
         * módosítás
-        * (létrehozás)
-    * Admin user generálás
+        * létrehozás
+        * egyenleg kezelés: feltöltés, módosítás
+    * Admin user kezelés
+        * Új admin hozzáadása
+        * Admin töröl
     * CAFF kezelése
         * törlés
         * adatmódosítás
     
-
-Use-case diagram
+[Use-case diagram + függőségi nyilak]
 
 ## Biztonsági követelmények és célok
 
 CIA és AAA alapján követelménye lista:
 * Confidentiality
-    * Személyes adatok titkossága.
+    * Személyes adatokokat (+egyenleg) csak a user látja, meg az adminok.
+    * CAFF-ot csak bejelentkezés után lehet látni
 * Integrity
+    * Személyes adatot csak a user és az admin módosíthat
+    * A user nem módosíthat egyenleget
+    * Más által feltöltött CAFF-ot nem lehet módosítani
+    * Admin módosíthat CAFF-ot
 * Availability
+    * Admin mindig eléri a rendszert
+    * User majdnem mindig, kivéve karbantartás alatt
 * Authentication
+    * Csak bejelentkezés után lehet elérni a rendszert
+    * Admin fiókot csak meglévő admin fiókkal lehet létrehozni
 * Authorization
+    * [insert admin feladatok] jogosultsághoz kötött tevékenység
+    * A webáruház elérése bejelentkezéshez kötött
 * Auditing
-
-Biztonsági célok: 
-* Biztonságos adattárolás
-* Naplózás
-
-Use-case diagram-ra függőségi nyilak.
+    * Minden tevékenységet naplózunk. 
 
 ## Threat assessment
 
 ### Assettek megállapítása
 * Fizikai
+    * Hardware, amin futunk
 * Emberi
+    * 
 * Logikai
+    * személyes adatok
+    * caff-ok
+    * pénz 
 
 Adatfolyam ábra
 
-### Veszélyek
+### Támadó modell kidolgozása
 * Spoofing:
     * Social engineering of admins  --> awareness campaign
     * User admin funkciókat próbál elérni --> megfelelő access control logika
@@ -87,13 +101,13 @@ Adatfolyam ábra
 * Information disclosure --> access control
     * Felhasználó adatok kiszívárognak --> access control
         * Egy felhasználó hozzáfér máséhoz
+        * Jelszó kiszvirgás -> jelszó hash-t tárolunk (sózott)
     * Admin hozzáfér a plaintext jelszavakhaz
     * Guest bármit lát
     * Admin jelsző kiszivárog
 * Elevation of privilige --> access control
-    * Adminná változtatja magát
-
-### Attacks
+    * Guest user jogosultságot szerez.
+    * Adminná változtatja magát. 
 
 ### Mitigációs lépések
 

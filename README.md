@@ -37,40 +37,41 @@ Követelmények:
 
 ## Biztonsági követelmények és célok
 
-CIA és AAA alapján követelménye lista:
-* Confidentiality
-    * Személyes adatokokat (+egyenleg) csak a user látja, meg az adminok.
-    * CAFF-ot csak bejelentkezés után lehet látni
-* Integrity
-    * Személyes adatot csak a user és az admin módosíthat
-    * A user nem módosíthat egyenleget
-    * Más által feltöltött CAFF-ot nem lehet módosítani
-    * Admin módosíthat CAFF-ot
-* Availability
-    * Admin mindig eléri a rendszert
-    * User majdnem mindig, kivéve karbantartás alatt
-* Authentication
-    * Csak bejelentkezés után lehet elérni a rendszert
-    * Admin fiókot csak meglévő admin fiókkal lehet létrehozni
-* Authorization
+A biztonsági követelményeket és célokat az alábbi kategóriák szerint csoportosíthatjuk. A fentebb részletezettek szerint három féle felhasználót különböztetünk meg: vendéget (nem bejelentkezett), felhasználót (bejelentkezett, normál), és adminisztrátor felhasználót. 
+
+* Bizalmasság
+    * Személyes adatokokat és az egyenleget csak az adott felhasználó illetve az adminisztrátorok láthatják.
+    * A feltöltött CAFF fájlok csak bejelentkezés után tekinhetők meg.
+* Integritás
+    * Egy felhasználó személyes adatait csak adott felhasználó vagy admin módosíthaja.
+    * Egy felhasználó egyenlegét közvetlenül csak egy admin módosíthatja. 
+    * Egy feltöltött CAFF fájl adatait (nevét, árát) csak a tulajdonosa (aki feltötte) illetve admin módosíthatja.
+* Elérhetőség
+    * Az admininsztrátoroknak mindig el kell tudni érniük a rendszert.
+    * A felhasználók is mindig eléhetik a rendszert, leszámítva az esetleges karbantartásokat.
+* Autentikáció
+    * Csak bejelentkezés után lehet elérni a rendszer felhasználói funkcióit (CAFF böngészés, vásárlás, feltöltés) és adminisztrátori funkcióit. 
+    * Adminisztrátori fiókot csak meglévő Adminisztrátori fiókkal lehet létrehozni.
+* Autorizáció
     * [insert admin feladatok] jogosultsághoz kötött tevékenység
     * A webáruház elérése bejelentkezéshez kötött
-* Auditing
-    * Minden tevékenységet naplózunk. 
+* Auditiálás
+    * Minden felhasználó minden tevékenységet naplózni kell.
 
 ## Threat assessment
 
-### Assettek megállapítása
-* Fizikai
-    * Hardware, amin futunk
-* Emberi
-    * 
-* Logikai
-    * személyes adatok
-    * caff-ok
-    * pénz 
+### Asset-ek
 
-Adatfolyam ábra
+* Fizikai
+    * Hardware
+* Logikai
+    * A felhasználók minden személyes adata
+    * CAFF file-ok
+    * a felhasználók egyenlegei
+
+<p>
+    <img src="figures/adatfolyam.png" width="800" title="Adatfolyam diagram">
+</p>
 
 ### Támadó modell kidolgozása
 
@@ -114,11 +115,14 @@ Adatfolyam ábra
 
 ## Architektúra tervek
 
-### Komponens diagram
+### Komoponens diagram
 
-### UMLsec kiegészítés a komponens diagramhoz
+<p>
+    <img src="figures/komponensdiagram.png" width="800" title="Komponens diagram">
+</p>
 
-### Rendszer viselkedése - szekvencia diagram
+
+### Rendszer viselkedése - szekvencia diagramok
 * Regisztráció
 * Belépés
 * Feltöltés

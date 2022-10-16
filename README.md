@@ -75,43 +75,82 @@ A biztonsági követelményeket és célokat az alábbi kategóriák szerint cso
 
 ### Támadó modell kidolgozása
 
+A támadómodell kidolgozását a STRIDE kereterendszer alapján tehetjük meg. 
+
 * Spoofing:
-    * Social engineering of admins  --> awareness campaign
-    * User admin funkciókat próbál elérni --> megfelelő access control logika
-    * Guest próbál user funkcióhoz hozzáférni --> megfelelő access control logika
-    * Adatbázis hozzáférés a rendszeren kívülről --> elzárt hálózaton fut a szerver
+    * Social engineering támadás az adminok ellen.
+    * Felhasználó admininsztrátori funkciókat próbál elérni.
+    * Vendég próbál felhasználói funkciókhoz hozzáférni.
+    * Adatbázis hozzáférés történik a rendszeren kívülről.
 * Tampering
-    * Sérül kommunikáció az adatbázisokkal --> elzárt hálózaton fut a szerver
-    * Webes kommunikáció módosítása --> https
-    * Komponensek közötti kommunikáció módosítása --> zárt rendszer
-    * CAFF kártevőt tartalmaz --> fasza parser
-    * Invalid CAFF-ok --> fasza parsser
-        * Lezárás
-        * ...
-    * Logok módosítás --> no access, backup
-* Letagadás --> logolás
-    * Egy user letagadja, hogy megkapta a pénzt egy másiktól
-    * User letagadja, hogy ő letörölte
-    * Admin kitöröl mindent és letagadja
+    * Sérül kommunikáció az adatbázisokkal.
+    * Webes kommunikáció manipulálása.
+    * Komponensek közötti kommunikáció módosítása.
+    * Kártevő bejutása CAFF fájlokkal. (veszélyes a szerverre és arra is aki letölti a CAFF-ot) 
+    * CAFF feldolgozásból adódó sérülékenységek (nem megfelelő parser logika, buffer overflow lehetőség az implementációban)
+    * Logok módosítása. 
+    * Egy felhasználó módosítja az egyenlegét. 
+* Letagadás 
+    * Egy user letagadja, hogy megkapta a pénzt egy másiktól.
+    * User letagadja, hogy ő letörölte az értéket CAFF fájlját.
+    * Admin kitöröl mindent és letagadja.
 * Denial of Service
-    * Kihúzzák a szervert --> bezárjuk a termet, kamera
-    * Túl nagy fájl feltöltése --> parser
-    * DDos --> public cloud
-    * Túl sok komment --> limit
-    * Túl sok regisztráció --> kívül esik a prioritásainkon
-    * Túl sok ... --> limit
-* Information disclosure --> access control
-    * Felhasználó adatok kiszívárognak --> access control
-        * Egy felhasználó hozzáfér máséhoz
-        * Jelszó kiszvirgás -> jelszó hash-t tárolunk (sózott)
+    * Fizikai támadás éri a szervert. 
+    * Túl nagy fájl feltöltése.
+    * DDoS támadás
+    * Túl sok komment
+    * Túl sok regisztráció.
+* Information disclosure.
+    * Felhasználói adatok kiszívárognak.
+    * Egy felhasználó hozzáfér más adataihoz.
+    * Jelszó kiszvirgás.
     * Admin hozzáfér a plaintext jelszavakhaz
-    * Guest bármit lát
-    * Admin jelsző kiszivárog
-* Elevation of privilige --> access control
-    * Guest user jogosultságot szerez.
-    * Adminná változtatja magát. 
+    * Vendég felhasználó tudja böngészni a feltöltött CAFF listát.
+    * Admin jelsző kiszivárog. 
+* Elevation of privilige
+    * Vendég, felhasználói jogosultságot szeret (bejelentkezés nélkül használja a rendszert).
+    * Egy felhasználó adminisztrátori jogosultságot szerez.  
 
 ### Mitigációs lépések
+
+A fenti támadási felületek alapján az alábbi védekezések szükségesek.
+
+Sok támadási felületet meg tudunk szüntetni a megfelelő autentikációval (jelszavas) és hozzáférés kezeléssel.  
+
+A fizikai támadások illetve a túlterheléses támadások problémáját átháríjük egy felhő szolgáltatóra.
+
+A letagadás jellegű fenyegetéseket részletes naplózással küszöböljük ki. 
+
+A konkrét fenyegetésekre adott válaszokat alább részletezzük. 
+
+* Spoofing:
+    * Social engineering támadás az adminok ellen.  --> figyelemfelhívó campaign-ok és oktatások szervezése (kívül esik a házi feladat keretein)
+    * Felhasználó admininsztrátori funkciókat ér el. --> !!! Megfelelő hozzáférés kezelő logika.
+    * Bejelentkezés nélküli hozzáférés a CAFF-okhoz. --> Jelszavas bejelentkezés. Megfelelő hozzáférés kezelő logika.
+    * Adatbázis hozzáférés történik a rendszeren kívülről. --> A felhőszolgáltató felelőssége. ??? - enkriptált adattárolás
+* Tampering
+    * Sérül kommunikáció az adatbázisokkal.  --> A felhőszolgáltató felelőssége.
+    * Webes kommunikáció manipulálása. --> https használata
+    * Komponensek közötti kommunikáció módosítása. --> ??? - Zárt rendszeren 
+    * Kártevő bejutása CAFF fájlokkal. (veszélyes a szerverre és arra is aki letölti a CAFF-ot) --> Feltöltött CAFF-ok ellenőrzése.
+    * CAFF feldolgozásból adódó sérülékenységek (nem megfelelő parser logika kihasználása, buffer overflow lehetőség az implementációban) --> Alapos tesztelés. 
+    * Logok módosítása. --> A logok írásának zárolása, biztonsági mentések létrehozása.
+* Denial of Service
+    * Fizikai támadás éri a szervert. --> Felhőszolgáltató felelőssége.
+    * Túl nagy fájl feltöltése. --> Fájlméret ellenőrzése.
+    * DDoS támadás --> Felhőszolgáltató felelőssége.
+    * Túl sok komment --> Kommentelés limitálása felhasználónként.
+    * Túl sok regisztráció --> kívül esik a prioritásainkon
+* Information disclosure --> access control
+    * Felhasználó adatok kiszívárognak --> Titkosított adattárolás. Megfelelő access kontrol.
+        * Egy felhasználó hozzáfér más adataihoz.
+        * Jelszó kiszvirgás -> jelszó hash-t tárolunk (sózott)
+    * Admin hozzáfér a plaintext jelszavakhaz
+    * Vendég felhasználó tudja böngészni a feltöltött CAFF listát.
+    * Admin jelsző kiszivárog. --> Kívül esik
+* Elevation of privilige
+    * Vendég, felhasználói jogosultságot szeret (bejelentkezés nélkül használja a rendszert).
+    * Egy felhasználó adminisztrátori jogosultságot szerez.  
 
 ## Architektúra tervek
 
@@ -121,8 +160,8 @@ A biztonsági követelményeket és célokat az alábbi kategóriák szerint cso
     <img src="figures/komponensdiagram.png" width="800" title="Komponens diagram">
 </p>
 
-
 ### Rendszer viselkedése - szekvencia diagramok
+
 * Regisztráció
 * Belépés
 * Feltöltés
@@ -132,14 +171,10 @@ A biztonsági követelményeket és célokat az alábbi kategóriák szerint cso
 
 ## Tesztelési terv
 
-* Mindentre code revirew és static analyzer
-* Parserre fuzzolás
+* Minden komponens alávetése code review-nak és statikus analízis eszközöknek.
+* A parser fuzzolása
 * Ha Flask lesz a backend: https://www.securecoding.com/blog/penetration-testing-in-flask-application/
 * Manuális tesztelés
-
-# Kérdések:
-* Pénz kell?
-* Bejelentkezési lib szabad-e?
 
 # Feladatok:
 * Árpi: 
@@ -152,10 +187,8 @@ A biztonsági követelményeket és célokat az alábbi kategóriák szerint cso
 * Máté:
     * Szekvencia diagramok
 * Misi:
-    * Adatfolyam diagram
-    * CAFF parser veszélyei
-    * Támadómodellek kirészletezése
-    * Biztonsági követelményekből szövegalkotás
+    * mitigációs lépések tisztázása
+    * adatfolyam diagramról szöveg
 
 # Megjegyzések
 

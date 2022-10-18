@@ -2,7 +2,6 @@
 
 ## Funkcionális követelmények
 
-Követelmények:
 * Guest
     * Regisztráció
 * Alap user
@@ -53,7 +52,7 @@ A biztonsági követelményeket és célokat az alábbi kategóriák szerint cso
     * Csak bejelentkezés után lehet elérni a rendszer felhasználói funkcióit (CAFF böngészés, vásárlás, feltöltés) és adminisztrátori funkcióit. 
     * Adminisztrátori fiókot csak meglévő Adminisztrátori fiókkal lehet létrehozni.
 * Autorizáció
-    * [insert admin feladatok] jogosultsághoz kötött tevékenység
+    * [[[]]]  admininisztrátori jogosultsághoz kötött
     * A webáruház elérése bejelentkezéshez kötött
 * Auditiálás
     * Minden felhasználó minden tevékenységet naplózni kell.
@@ -61,6 +60,8 @@ A biztonsági követelményeket és célokat az alábbi kategóriák szerint cso
 ## Threat assessment
 
 ### Asset-ek
+
+A rendszerben az alábbi értéket képviselő tényezők (asset-ek) jelennek meg.
 
 * Fizikai
     * Hardware
@@ -108,10 +109,10 @@ A támadómodell kidolgozását a STRIDE kereterendszer alapján tehetjük meg.
     * Vendég felhasználó tudja böngészni a feltöltött CAFF listát.
     * Admin jelsző kiszivárog. 
 * Elevation of privilige
-    * Vendég, felhasználói jogosultságot szeret (bejelentkezés nélkül használja a rendszert).
+    * Vendég, felhasználói jogosultságot szerez (bejelentkezés nélkül használja a rendszert).
     * Egy felhasználó adminisztrátori jogosultságot szerez.  
 
-### Mitigációs lépések
+### Biztonsági követelmények és mechanizmusok
 
 A fenti támadási felületek alapján az alábbi védekezések szükségesek.
 
@@ -121,36 +122,50 @@ A fizikai támadások illetve a túlterheléses támadások problémáját áth�
 
 A letagadás jellegű fenyegetéseket részletes naplózással küszöböljük ki. 
 
-A konkrét fenyegetésekre adott válaszokat alább részletezzük. 
+A konkrét fenyegetésekre adott válaszokat az alábbi táblázatban részletezzük:
 
-* Spoofing:
-    * Social engineering támadás az adminok ellen.  --> figyelemfelhívó campaign-ok és oktatások szervezése (kívül esik a házi feladat keretein)
-    * Felhasználó admininsztrátori funkciókat ér el. --> !!! Megfelelő hozzáférés kezelő logika.
-    * Bejelentkezés nélküli hozzáférés a CAFF-okhoz. --> Jelszavas bejelentkezés. Megfelelő hozzáférés kezelő logika.
-    * Adatbázis hozzáférés történik a rendszeren kívülről. --> A felhőszolgáltató felelőssége. ??? - enkriptált adattárolás
-* Tampering
-    * Sérül kommunikáció az adatbázisokkal.  --> A felhőszolgáltató felelőssége.
-    * Webes kommunikáció manipulálása. --> https használata
-    * Komponensek közötti kommunikáció módosítása. --> ??? - Zárt rendszeren 
-    * Kártevő bejutása CAFF fájlokkal. (veszélyes a szerverre és arra is aki letölti a CAFF-ot) --> Feltöltött CAFF-ok ellenőrzése.
-    * CAFF feldolgozásból adódó sérülékenységek (nem megfelelő parser logika kihasználása, buffer overflow lehetőség az implementációban) --> Alapos tesztelés. 
-    * Logok módosítása. --> A logok írásának zárolása, biztonsági mentések létrehozása.
-* Denial of Service
-    * Fizikai támadás éri a szervert. --> Felhőszolgáltató felelőssége.
-    * Túl nagy fájl feltöltése. --> Fájlméret ellenőrzése.
-    * DDoS támadás --> Felhőszolgáltató felelőssége.
-    * Túl sok komment --> Kommentelés limitálása felhasználónként.
-    * Túl sok regisztráció --> kívül esik a prioritásainkon
-* Information disclosure --> access control
-    * Felhasználó adatok kiszívárognak --> Titkosított adattárolás. Megfelelő access kontrol.
-        * Egy felhasználó hozzáfér más adataihoz.
-        * Jelszó kiszvirgás -> jelszó hash-t tárolunk (sózott)
-    * Admin hozzáfér a plaintext jelszavakhaz
-    * Vendég felhasználó tudja böngészni a feltöltött CAFF listát.
-    * Admin jelsző kiszivárog. --> Kívül esik
-* Elevation of privilige
-    * Vendég, felhasználói jogosultságot szeret (bejelentkezés nélkül használja a rendszert).
-    * Egy felhasználó adminisztrátori jogosultságot szerez.  
+### Spoofing
+
+|   Threat   | Biztonsági követelmény  |
+|---|---|
+| Spoofing | --- |
+| Social engineering támadás az adminok ellen.  | Kívül esik a házi feladat határain.  |
+| Felhasználó admininsztrátori funkciókat ér el (pl. pénzt ad magának) | Jelszavas bejelentkezés (jelsző követelmények). Megfelelő hozzáférés kezelő logika. |
+| Bejelentkezés nélküli hozzáférés a Webáruházhoz. | Jelszavas bejelentkezés. Megfelelő hozzáférés kezelő logika. |
+| Támadó megszemélyesíti a rendszerünket és közvetlenül hozzáfér az adatbázishoz. | Az adatbázisok és a backend privát hálózaton kommunikálnak. |
+
+### Tampering
+
+| Threat | Biztonsági követelmény |
+| --- | --- |
+| Man-in-the-middle támadás a szerver és az adatbázisok között. | Az adatbázisok és a backend privát hálózaton kommunikálnak. Adatbázis hozzáférés authentikálása. |
+| Man-in-the-middle támadás a backend és a frontend között. | Https használata |
+| Komponensek közötti kommunikáció módosítása. | Az adatbázisok és a backend privát hálózaton kommunikálnak. Input sanitization. |
+| Kártékony CAFF fájl bejutása. | CAFF validilás, parse-olás előtt. |
+| Logok módosítása | A logok módosításának és törlésének tilalma, biztonsági mentések létrehozása. |
+
+### Denial of Service
+
+| Threat | Biztonsági követelmény |
+| --- | --- |
+| Fizikai támadás éri a szervert. (Kihúzzák, elázik, stb) | Felhőszolgáltató felelőssége. |
+| Túl nagy adatmennyiség feltöltése. | Fájlméret ellenőrzése és a fájlok számának limitálása. |
+| DDoS támadás | Felhőszolgáltató felelőssége. |
+| Túl sok komment írása | Kommentelés limitálása felhasználónként. |
+| Túl sok regisztráció | KÍvül esik a házi feladat keretein. |
+
+### Information disclosure
+
+| Threat | Biztonsági követelmény |
+|--- | --- | 
+| Felhasználó adatok (admin jelszó, jelszó, egyenleg, személyes adatok) kiszívárognak | Jelszavak titkosítása (Salted Hash) Megfelelő access kontrol. |
+
+### Elevation of privilige
+
+| Threat | Biztonsági követelmény |
+| --- | --- |
+| Vendég, felhasználói jogosultságot szeret (bejelentkezés nélkül használja a rendszert). | Jelszavas bejelentkezés (jelsző követelmények). Megfelelő hozzáférés kezelő logika. |
+| Egy felhasználó adminisztrátori jogosultságot szerez. | Megfelelő hozzáférés kezelő logika. |
 
 ## Architektúra tervek
 
@@ -171,25 +186,35 @@ A konkrét fenyegetésekre adott válaszokat alább részletezzük.
 
 ## Tesztelési terv
 
-* Minden komponens alávetése code review-nak és statikus analízis eszközöknek.
-* A parser fuzzolása
-* Ha Flask lesz a backend: https://www.securecoding.com/blog/penetration-testing-in-flask-application/
-* Manuális tesztelés
+A rendszer tesztelése az alábbiak szerint kerül majd megvalósításra.
+
+* Funkcionális tesztelés
+    * Komoponensek unit-tesztelése az adott nyelv eszközeivel
+    * Az egész rendszer manuális tesztelése
+* Biztonsági tesztelés
+    * Minden komponens code review-zása.
+    * Statikus analízis
+        * C Parser:
+            * VS Code extension linter funkciója
+            * Cppcheck (static analyzer)
+        * Python backend: 
+            * PyCharm IDE beépített code analyzer-e
+            * Mypy static analyzer és type checker
+        * Mobil frontend
+            * 
+    * Dinamikus tesztelés
+        * C parser fuzzolása: American Fuzzy Lop tool-lal
+        * Flask Python Backend tesztelése: Zed Attack Proxy pentest tool-lal
 
 # Feladatok:
 * Árpi: 
     * Komponens diagram
     * Architektúra tervek szövege -> minden interfészről 1-2 mondat
+    * Android tesztek !!!!
 * Heni:
-    * Use case diagram 
-    * Funkcionális követelmények
-    * Biztonsági követelmények
+    * Use case diagramok (3 darab), include nyilak
+    * Funkcionális követelményekhez szöveg, bevezetés
 * Máté:
     * Szekvencia diagramok
 * Misi:
-    * mitigációs lépések tisztázása
-    * adatfolyam diagramról szöveg
-
-# Megjegyzések
-
-Komponensdiagramban a parser legyen egy külön komponens a CAFF Áruházon kívül
+    * adatfolyam ábra

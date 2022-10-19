@@ -202,7 +202,13 @@ A konkrét fenyegetésekre adott válaszokat az alábbi táblázatban részletez
 
 ## Architektúra tervek
 
-### Komoponens diagram
+A megoldásunkban az architektúrális tervek vizualizálásához kétféle diagramot használunk:
+
+* __Statikus elemek:__ Komponensdiagram
+* __Dinamikus elemek:__ Szekvenciadiagram
+
+### Komoponensdiagram
+
 
 <p>
     <img src="figures/komponensdiagram.png" title="Komponens diagram">

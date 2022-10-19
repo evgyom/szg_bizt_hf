@@ -102,7 +102,7 @@ A rendszerben az alábbi értéket képviselő tényezők (asset-ek) jelennek me
 A rendszer komponensei az alábbi ábrán láthatók. 
 
 <p>
-    <img src="figures/adatfolyam_kulon_egyenleg.drawio.png" width="800" title="Adatfolyam diagram">
+    <img src="figures/adatfolyam_kulon_egyenleg.drawio.png" title="Adatfolyam diagram">
 </p>
 
 ### Támadó modell kidolgozása
@@ -121,7 +121,8 @@ A támadómodell kidolgozását a STRIDE kereterendszer alapján tehetjük meg.
     * Kártevő bejutása CAFF fájlokkal. (veszélyes a szerverre és arra is aki letölti a CAFF-ot) 
     * CAFF feldolgozásból adódó sérülékenységek (nem megfelelő parser logika, buffer overflow lehetőség az implementációban)
     * Logok módosítása. 
-    * Egy felhasználó módosítja az egyenlegét. 
+    * Egy felhasználó módosítja az egyenlegét.
+    * Rendszeridő manipulálása
 * Letagadás 
     * Egy user letagadja, hogy megkapta a pénzt egy másiktól.
     * User letagadja, hogy ő letörölte az értéket CAFF fájlját.
@@ -174,6 +175,7 @@ A konkrét fenyegetésekre adott válaszokat az alábbi táblázatban részletez
 | Komponensek közötti kommunikáció módosítása. | Az adatbázisok és a backend privát hálózaton kommunikálnak. Input sanitization. |
 | Kártékony CAFF fájl bejutása. | CAFF validilás, parse-olás előtt. |
 | Logok módosítása | A logok módosításának és törlésének tilalma, biztonsági mentések létrehozása. |
+| Rendszeridő manipulálása | NTS Protokoll használata. |
 
 ### Denial of Service
 
@@ -249,6 +251,8 @@ A rendszer tesztelése az alábbiak szerint kerül majd megvalósításra.
     * Andoidon Espresso library használata UI teszteléshez.
 * Biztonsági tesztelés
     * Minden komponens code review-zása.
+    * Python komponensek esetén _Google Python Style Guide_ kódolási konvenciók követése
+    * Kotlin esetében a JetBrains által ajánlott [konvenciók](https://kotlinlang.org/docs/coding-conventions.html) követése
     * Statikus analízis
         * C Parser:
             * VS Code extension linter funkciója
@@ -264,9 +268,9 @@ A rendszer tesztelése az alábbiak szerint kerül majd megvalósításra.
 
 # Feladatok:
 * Árpi: 
-    * Komponens diagram
-    * Architektúra tervek szövege -> minden interfészről 1-2 mondat
-    * Android tesztek !!!!
+    * [x] Komponens diagram
+    * [] Architektúra tervek szövege -> minden interfészről 1-2 mondat
+    * [x] Android tesztek !!!!
 * Heni:
     * Use case diagramok (3 darab), include nyilak
     * Funkcionális követelményekhez szöveg, bevezetés

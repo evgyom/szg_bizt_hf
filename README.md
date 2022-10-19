@@ -55,13 +55,13 @@ A biztonsági követelmények és a szükséges biztonsági funkcionalitások me
         * adatmódosítás
     
 <p>
-    <img src="figures/use-case-admin.png" width="800" title="Adatfolyam diagram">
+    <img src="figures/use-case-admin.png">
 </p>
 <p>
-    <img src="figures/use-case-felhasznalo.png" width="800" title="Adatfolyam diagram">
+    <img src="figures/use-case-felhasznalo.png">
 </p>
 <p>
-    <img src="figures/use-case-vendeg.png" width="600" title="Adatfolyam diagram">
+    <img src="figures/use-case-vendeg.png">
 </p>
 
 ## Biztonsági követelmények és célok
@@ -204,7 +204,7 @@ A konkrét fenyegetésekre adott válaszokat az alábbi táblázatban részletez
 ### Komoponens diagram
 
 <p>
-    <img src="figures/komponensdiagram.png" width="800" title="Komponens diagram">
+    <img src="figures/komponensdiagram.png" title="Komponens diagram">
 </p>
 
 

@@ -213,27 +213,27 @@ A konkrét fenyegetésekre adott válaszokat az alábbi táblázatban részletez
 
 
 <p>
-    <img src="figures/regisztracio.png" width="800" title="Regisztráció">
+    <img src="figures/regisztracio.PNG" width="800" title="Regisztráció">
 </p>
 
 <p>
-    <img src="figures/belepes.png" width="800" title="Belépés">
+    <img src="figures/belepes.PNG" width="800" title="Belépés">
 </p>
 
 <p>
-    <img src="figures/feltoltes.png" width="800" title="Feltöltés">
+    <img src="figures/feltoltes.PNG" width="800" title="Feltöltés">
 </p>
 
 <p>
-    <img src="figures/letoltes.png" width="800" title="Letöltés">
+    <img src="figures/letoltes.PNG" width="800" title="Letöltés">
 </p>
 
 <p>
-    <img src="figures/caff_adatmod.png" width="800" title="CAFF adatmódosítás">
+    <img src="figures/caff_adatmod.PNG" width="800" title="CAFF adatmódosítás">
 </p>
 
 <p>
-    <img src="figures/felh_adtamodos.png" width="800" title="Felhasználói adatmódosítás">
+    <img src="figures/felh_adtamodos.PNG" width="800" title="Felhasználói adatmódosítás">
 </p>
 
 

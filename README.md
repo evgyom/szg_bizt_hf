@@ -24,8 +24,11 @@ A biztonsági követelmények és a szükséges biztonsági funkcionalitások me
 
 ## Funkcionális követelmények
 
-* Guest
+* Vendég
     * Regisztráció
+
+![Vendég felhasználó use-case](figures/use-case-vendeg.png)
+
 * Alap user
     * Belépés
         * Termék lista böngészése
@@ -40,6 +43,9 @@ A biztonsági követelmények és a szükséges biztonsági funkcionalitások me
         * saját CAFF-ok kezelése
             * törlés
             * ár/név változtatás
+
+![Alap felhasználó use-case](figures/use-case-felhasznalo.png)
+
 * Admin user
     * Belépés
     * User kezelés
@@ -53,16 +59,9 @@ A biztonsági követelmények és a szükséges biztonsági funkcionalitások me
     * CAFF kezelése
         * törlés
         * adatmódosítás
-    
-<p>
-    <img src="figures/use-case-admin.png">
-</p>
-<p>
-    <img src="figures/use-case-felhasznalo.png">
-</p>
-<p>
-    <img src="figures/use-case-vendeg.png">
-</p>
+
+![Alap felhasználó use-case](figures/use-case-admin.png)
+
 
 ## Biztonsági követelmények és célok
 

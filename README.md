@@ -247,6 +247,7 @@ A rendszer tesztelése az alábbiak szerint kerül majd megvalósításra.
 * Funkcionális tesztelés
     * Komoponensek unit-tesztelése az adott nyelv eszközeivel
     * Az egész rendszer manuális tesztelése
+    * Andoidon Espresso library használata UI teszteléshez.
 * Biztonsági tesztelés
     * Minden komponens code review-zása.
     * Statikus analízis
@@ -261,7 +262,6 @@ A rendszer tesztelése az alábbiak szerint kerül majd megvalósításra.
     * Dinamikus tesztelés
         * C parser fuzzolása: American Fuzzy Lop tool-lal
         * Flask Python Backend tesztelése: Zed Attack Proxy pentest tool-lal
-        * Andoidon Espresso library használata UI teszteléshez.
 
 # Feladatok:
 * Árpi: 

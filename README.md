@@ -1,3 +1,25 @@
+# Bevezetés
+
+Egy olyan online áruházat kell készíteni, amiben egyedi formátumú animált képeket lehet böngészni. A szoftvernek a CAFF (CrySyS Animated File Format) formátumot kell támogatnia. A teljes rendszer kell, hogy tartalmazzon egy HTTP(S) protokollon elérhető távoli szolgáltatást, valamint az ahhoz tartozó webes vagy mobil klienst.
+
+Felhasznált formátumok:
+* CAFF fájlformátum
+    * tömörítés nélküli animációformátum
+    * CIFF képek tárolására alkalmas
+    * az animációhoz tartozó metaadatokat tárolja
+* CIFF fájlformátum
+    * tömörítés nélküli képformátum
+    * pixel informácikat tartalmaz
+    * a képhez tartozó metaadatokat tárolja
+
+A rendszernek támogatnia kell az alábbi feladatokat:
+* felhasználóknak kell tudni regisztrálni és belépni
+* felhasználóknak kell tudni CAFF fájlt feltölteni, letölteni, keresni
+* felhasználóknak kell tudni CAFF fájlhoz megjegyzést hozzáfűzni
+* a rendszerben legyen adminisztrátor felhasználó, aki tud adatokat módosítani, törölni
+
+A biztonsági követelmények és a szükséges biztonsági funkcionalitások meghatározásához az előadáson megismert threat modeling eljárást használjuk. Az architektúra terveket UML diagramok formájában dokumentáljuk, használva az UMLsec kiterjesztést.
+
 # Követelmények
 
 ## Funkcionális követelmények
@@ -32,7 +54,15 @@
         * törlés
         * adatmódosítás
     
-[Use-case diagram + függőségi nyilak]
+<p>
+    <img src="figures/use-case-admin.png" width="800" title="Adatfolyam diagram">
+</p>
+<p>
+    <img src="figures/use-case-felhasznalo.png" width="800" title="Adatfolyam diagram">
+</p>
+<p>
+    <img src="figures/use-case-vendeg.png" width="800" title="Adatfolyam diagram">
+</p>
 
 ## Biztonsági követelmények és célok
 

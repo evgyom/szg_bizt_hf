@@ -233,26 +233,37 @@ A a komponensdiagramon látható interfészek leírása:
 
 ### Rendszer viselkedése - szekvencia diagramok
 
+#### Regisztráció
 
 <p>
     <img src="figures/regisztracio.PNG" width="800" title="Regisztráció">
 </p>
 
+#### Belépés
+
 <p>
     <img src="figures/belepes.PNG" width="800" title="Belépés">
 </p>
+
+#### CAFF Feltöltés
 
 <p>
     <img src="figures/feltoltes.PNG" width="800" title="Feltöltés">
 </p>
 
+#### CAFF Letöltés
+
 <p>
     <img src="figures/letoltes.PNG" width="800" title="Letöltés">
 </p>
 
+#### CAFF Adatmódosítás
+
 <p>
     <img src="figures/caff_adatmod.PNG" width="800" title="CAFF adatmódosítás">
 </p>
+
+#### Felhasználó Adatmódosítás
 
 <p>
     <img src="figures/felh_adtamodos.PNG" width="800" title="Felhasználói adatmódosítás">

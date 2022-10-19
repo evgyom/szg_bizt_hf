@@ -61,7 +61,7 @@ A biztonsági követelmények és a szükséges biztonsági funkcionalitások me
     <img src="figures/use-case-felhasznalo.png" width="800" title="Adatfolyam diagram">
 </p>
 <p>
-    <img src="figures/use-case-vendeg.png" width="800" title="Adatfolyam diagram">
+    <img src="figures/use-case-vendeg.png" width="600" title="Adatfolyam diagram">
 </p>
 
 ## Biztonsági követelmények és célok
@@ -82,7 +82,7 @@ A biztonsági követelményeket és célokat az alábbi kategóriák szerint cso
     * Csak bejelentkezés után lehet elérni a rendszer felhasználói funkcióit (CAFF böngészés, vásárlás, feltöltés) és adminisztrátori funkcióit. 
     * Adminisztrátori fiókot csak meglévő Adminisztrátori fiókkal lehet létrehozni.
 * Autorizáció
-    * [[[]]]  admininisztrátori jogosultsághoz kötött
+    * Az adminsztrátori tevékenységek (egyenleg feltöltés, más felhasználó adatainak módosítása, adminisztrátor létrehozása)  jogosultsághoz kötöttek
     * A webáruház elérése bejelentkezéshez kötött
 * Auditiálás
     * Minden felhasználó minden tevékenységet naplózni kell.
@@ -100,8 +100,10 @@ A rendszerben az alábbi értéket képviselő tényezők (asset-ek) jelennek me
     * CAFF file-ok
     * a felhasználók egyenlegei
 
+A rendszer komponensei az alábbi ábrán láthatók. 
+
 <p>
-    <img src="figures/adatfolyam.png" width="800" title="Adatfolyam diagram">
+    <img src="figures/adatfolyam_kulon_egyenleg.drawio.png" width="800" title="Adatfolyam diagram">
 </p>
 
 ### Támadó modell kidolgozása
@@ -205,14 +207,38 @@ A konkrét fenyegetésekre adott válaszokat az alábbi táblázatban részletez
     <img src="figures/komponensdiagram.png" width="800" title="Komponens diagram">
 </p>
 
+
+
 ### Rendszer viselkedése - szekvencia diagramok
 
-* Regisztráció
-* Belépés
-* Feltöltés
-* Letöltés
-* Admin feladatok
-    * Adat módosítás
+
+<p>
+    <img src="figures/regisztracio.png" width="800" title="Regisztráció">
+</p>
+
+<p>
+    <img src="figures/belepes.png" width="800" title="Belépés">
+</p>
+
+<p>
+    <img src="figures/feltoltes.png" width="800" title="Feltöltés">
+</p>
+
+<p>
+    <img src="figures/letoltes.png" width="800" title="Letöltés">
+</p>
+
+<p>
+    <img src="figures/caff_adatmod.png" width="800" title="CAFF adatmódosítás">
+</p>
+
+<p>
+    <img src="figures/felh_adtamodos.png" width="800" title="Felhasználói adatmódosítás">
+</p>
+
+
+
+
 
 ## Tesztelési terv
 
@@ -248,3 +274,4 @@ A rendszer tesztelése az alábbiak szerint kerül majd megvalósításra.
     * Szekvencia diagramok
 * Misi:
     * adatfolyam ábra
+    * adatfolyam ábra komponenseinek leírása

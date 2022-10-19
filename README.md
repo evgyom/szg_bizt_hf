@@ -209,16 +209,26 @@ A megoldásunkban az architektúrális tervek vizualizálásához kétféle diag
 
 ### Komoponensdiagram
 
+![Komponensdiagram](figures/komponensdiagram.png)
 
-<p>
-    <img src="figures/komponensdiagram.png" title="Komponens diagram">
-</p>
-
+A a komponensdiagramon látható interfészek leírása:
+* **Regisztráció**: A vendég felhasználók ezen az interfészen tudnak regisztrálni a rendszerbe.
+* **Bejelentkezés**: A normál felhasználók valamint adminisztrátorok ezen az interfészen tudnak bejelentkezni a rendszerbe.
+* **Felhasználói adatok módosítása**: A normál felhasználók ezen az interfészen tudják saját felhasználiói adataikat módosítani, az adminok pedig tetszőleges felhasználó adatait.
+* **Felhasználó törlése**: A normál felhasználók ezen az interfészen tudják saját felhasználiói fiókjukat törölni, az adminok pedig tetszőleges felhasználó fiókját.
+* **Termékek böngészése**: A normál felhasználók ezen az interfészen tudják a terméklistát böngészni.
+* **Termékek kezelése**: A normál felhasználók ezen az interfészen tudnak név szerint termékeket keresni a rendszerben.
+* **Termékek részletes nézete**: A normál felhasználók ezen az interfészen tudják egy adott termék részletes adatait, valamint a hozzá kapcsolódó kommenteket megtekinteni.
+* **Kommentelés**: A normál felhasználók ezen az interfészen tudnak új kommentet fűzni egy termékhez.
+* **CAFF feltöltés**: a normál felhasználók ezen az interfészen tudnak új CAFF fájlt feltölteni a rendszerbe.
+* **CAFF adatmódosítás**: A normál felhasználók ezen az interfészen tudják a saját feltöltött CAFF fájljaik (termékeik) adatait módosítani, az adminisztrátorok pedig tetszőleges CAFF fájlét.
+* **CAFF vásárlás**: A normál felhasználók ezen az interfészen tudnak egy (másik felhasználó által feltöltött) CAFF fájlt megvásárolni.
+* **CAFF letöltés**: A normál felhasználók ezen az interfészen tudnak egy, már megvásárolt CAFF fájlt letölteni.
+* **CAFF törlés**: A normál felhasználók ezen az interfészen tudják a saját  feltöltött CAFF fájljaikat törölni, az adminisztrátorok pedig tetszőleges CAFF fájlt.
 
 #### Komponensdiagram UMLsec kiterjesztéssel
 
-![Komponensdiagram UMLsec kiterjesztéssel](figures/komponensdiagram_umlsec.png")
-
+![Komponensdiagram UMLsec kiterjesztéssel](figures/komponensdiagram_umlsec.png)
 
 
 ### Rendszer viselkedése - szekvencia diagramok
@@ -249,9 +259,6 @@ A megoldásunkban az architektúrális tervek vizualizálásához kétféle diag
 </p>
 
 
-
-
-
 ## Tesztelési terv
 
 A rendszer tesztelése az alábbiak szerint kerül majd megvalósításra.
@@ -276,17 +283,3 @@ A rendszer tesztelése az alábbiak szerint kerül majd megvalósításra.
     * Dinamikus tesztelés
         * C parser fuzzolása: American Fuzzy Lop tool-lal
         * Flask Python Backend tesztelése: Zed Attack Proxy pentest tool-lal
-
-# Feladatok:
-* Árpi: 
-    * [x] Komponens diagram
-    * [] Architektúra tervek szövege -> minden interfészről 1-2 mondat
-    * [x] Android tesztek !!!!
-* Heni:
-    * Use case diagramok (3 darab), include nyilak
-    * Funkcionális követelményekhez szöveg, bevezetés
-* Máté:
-    * Szekvencia diagramok
-* Misi:
-    * adatfolyam ábra
-    * adatfolyam ábra komponenseinek leírása

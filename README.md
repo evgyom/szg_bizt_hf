@@ -257,10 +257,11 @@ A rendszer tesztelése az alábbiak szerint kerül majd megvalósításra.
             * PyCharm IDE beépített code analyzer-e
             * Mypy static analyzer és type checker
         * Mobil frontend
-            * 
+            * Android Studio beépített linter
     * Dinamikus tesztelés
         * C parser fuzzolása: American Fuzzy Lop tool-lal
         * Flask Python Backend tesztelése: Zed Attack Proxy pentest tool-lal
+        * Andoidon Espresso library használata UI teszteléshez.
 
 # Feladatok:
 * Árpi: 

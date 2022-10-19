@@ -215,6 +215,11 @@ A megoldásunkban az architektúrális tervek vizualizálásához kétféle diag
 </p>
 
 
+#### Komponensdiagram UMLsec kiterjesztéssel
+
+![Komponensdiagram UMLsec kiterjesztéssel](figures/komponensdiagram_umlsec.png")
+
+
 
 ### Rendszer viselkedése - szekvencia diagramok
 

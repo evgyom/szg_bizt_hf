@@ -160,7 +160,6 @@ A konkrét fenyegetésekre adott válaszokat az alábbi táblázatban részletez
 
 |   Threat   | Biztonsági követelmény  |
 |---|---|
-| Spoofing | --- |
 | Social engineering támadás az adminok ellen.  | Kívül esik a házi feladat határain.  |
 | Felhasználó admininsztrátori funkciókat ér el (pl. pénzt ad magának) | Jelszavas bejelentkezés (jelsző követelmények). Megfelelő hozzáférés kezelő logika. |
 | Bejelentkezés nélküli hozzáférés a Webáruházhoz. | Jelszavas bejelentkezés. Megfelelő hozzáférés kezelő logika. |

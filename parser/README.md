@@ -1,2 +1,42 @@
-Todos:
-* check endianness of 8 byte length fields
+## Todos
+* read about the gif format
+* https://prettydiff.com/2/guide/unrelated_parser.xhtml#howto-lexer
+* https://supunsetunga.medium.com/writing-a-parser-getting-started-44ba70bb6cc9
+
+## What is in a GIF?
+https://giflib.sourceforge.net/whatsinagif/bits_and_bytes.html
+https://giflib.sourceforge.net/whatsinagif/lzw_image_data.html
+
+* Header
+    * Signature
+    * Version
+* Logic Screen Descriptor
+    * Canvas width (not really relevant)
+    * Canvas height (not really relevant)
+    * Packed field
+        * Global color table - 1 bit
+        * Color resolution (N)  - 3 bits
+        * Sort flag - 1 bit
+        * Background color intex
+        * Pixel aspect ratio
+* Global Color Table
+    * 2^(N+1) colors, each color 3 bytes
+    * each color has an index
+* Graphics Control Extension
+* Image Descriptor
+    * Image separator
+    * Postions left, top, width, height
+    * Packed field
+* Local color table
+    * Same as the global color table
+ * Image data
+    * LZW Compression
+    * 
+* Trailer: 3B
+
+### Animation
+https://giflib.sourceforge.net/whatsinagif/animation_and_transparency.html
+
+###
+
+https://github.com/lecram/gifenc

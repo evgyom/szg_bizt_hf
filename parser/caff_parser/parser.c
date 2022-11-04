@@ -2,9 +2,9 @@
 
 #include "lexer.h"
 
-int main(){
+int parse(char * path){
     printf("This is a demo for the caff_parser library.\n");
-    FILE * fp = fopen("caff_examples/1.caff", "rb");
+    FILE * fp = fopen(path, "rb");
     
     if(fp == NULL){
         printf("Cannot open file. Returning.\n");

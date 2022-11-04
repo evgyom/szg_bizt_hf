@@ -1,5 +1,5 @@
 # Create a library
-SET(lib_sources reader.c lexer.c)
+SET(lib_sources reader.c lexer.c parser.c)
 add_library(caff_parser_static ${lib_sources})
 
 add_library(caff_parser_shared SHARED ${lib_sources})

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+// Reader function return statuses
 typedef enum{
     READER_STATUS_SUCCESS,
     READER_FP_NULL,
@@ -34,21 +35,5 @@ reader_status_t reader_peek(FILE * fp, int n, unsigned char * buffer, int buffer
 * buffer_size: the size of the output buffer
 */
 reader_status_t reader_consume(FILE * fp, int n, unsigned char * buffer, int buffer_size);
-
-/*
-* 
-*/
-reader_status_t reader_search_character(FILE * fp, char * buffer, int buffer_size, int * length_of_return_buffer, char char_to_find, int search_max);
-
-/* Function: is_eof
-*
-* Params:
-* fp: pointer to an opened file
-*
-* Return value:
-* true, if the eof is reached
-* false, if the eof is not reached
-*/
-bool is_eof(FILE * fp);
 
 #endif

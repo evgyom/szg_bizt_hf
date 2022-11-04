@@ -5,10 +5,6 @@
 frame_status_t process_header(FILE * fp, long long  * num_anims){
     char buffer[BUF_SIZE];
 
-    // Find the start of the header
-    int len_of_return_buf;
-    reader_search_character(fp, buffer, BUF_SIZE, &len_of_return_buf, CAFF_HEADER_ID, BUF_SIZE);
-
     // Get the length of the header
     long long size_of_frame;
     reader_consume(fp, CAFF_FRAME_LENGTH_SIZE, buffer, BUF_SIZE);
@@ -41,10 +37,6 @@ frame_status_t process_header(FILE * fp, long long  * num_anims){
 
 frame_status_t process_credits(FILE * fp, char * date, char * creator_buffer, int creator_buffer_size, long long * creator_name_length){
     char buffer[BUF_SIZE];
-
-    // Find the start of the credits frame
-    int len_of_return_buf;
-    reader_search_character(fp, buffer, BUF_SIZE, &len_of_return_buf, CAFF_CREDITS_ID, BUF_SIZE);
 
     // Get the length of the credits frame
     long long size_of_frame;

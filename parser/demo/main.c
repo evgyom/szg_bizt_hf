@@ -3,9 +3,11 @@
 #include "lexer.h"
 
 int main(){
+    printf("This is a demo for the caff_parser library.\n");
     FILE * fp = fopen("caff_examples/1.caff", "rb");
     
     if(fp == NULL){
+        printf("Cannot open file. Returning.\n");
         return 1;
     }
 

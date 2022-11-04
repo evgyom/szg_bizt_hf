@@ -11,14 +11,9 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(
-  hello_test
-  "hello_test.cc"
-)
-target_link_libraries(
-  hello_test
-  GTest::gtest_main
-)
+add_executable(reader_test "reader_test.cc")
+target_include_directories(reader_test PRIVATE caff_parser)
+target_link_libraries(reader_test GTest::gtest_main caff_parser_static)
 
 include(GoogleTest)
-gtest_discover_tests(hello_test)
+gtest_discover_tests(reader_test)

@@ -13,10 +13,10 @@ def get_section_from_binary(path_in, path_out, start, end):
 
 if __name__ == "__main__":
     path_in = caff_folder.joinpath("1.caff")
-    path_out = caff_folder.joinpath("1_header_only.caff")
+    path_out = caff_folder.joinpath("1_header_only_1.caff")
     get_section_from_binary(path_in, path_out, 0, 29)
 
-    path_out = caff_folder.joinpath("1_credits_only.caff")
+    path_out = caff_folder.joinpath("1_credits_only_1.caff")
     get_section_from_binary(path_in, path_out, 29, 64)
 
     path_out = caff_folder.joinpath("1_header_only_eof.caff")

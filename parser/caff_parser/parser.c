@@ -11,9 +11,12 @@ int parse(char * path){
         return 1;
     }
 
+    frame_status_t stat;
+
     // Read header
     long long num_anims;
-    process_header(fp, &num_anims);    
+    stat = process_header(fp, &num_anims);    
+    printf("Process header returned with status: %d\n", stat);
     printf("CAFF header processed. Number of CIFFs in CAFF: %d\n", num_anims);
 
     // Read credits
@@ -21,10 +24,8 @@ int parse(char * path){
     unsigned char creator_buffer[100];
     long long creator_name_len;
 
-    frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
-    if(stat != LEXER_FRAME_OK)
-    printf("Process credits returned with status: %d", stat);
-        return 1;
+    stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+    printf("Process credits returned with status: %d\n", stat);
 
     printf("Date:\n");
     int i;

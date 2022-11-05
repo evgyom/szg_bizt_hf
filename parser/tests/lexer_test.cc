@@ -12,8 +12,11 @@ extern "C"{
 #define CAFF_1_HEADER_INVALID_ID_PATH "../../caff_examples/1_header_only_invalid_id.caff"
 #define CAFF_1_HEADER_INVALID_MAGIC_PATH "../../caff_examples/1_header_only_invalid_magic.caff"
 #define CAFF_1_HEADER_INVALID_SIZES_PATH "../../caff_examples/1_header_only_invalid_sizes.caff"
+#define CAFF_1_HEADER_EOF_PATH "../../caff_examples/1_header_only_eof.caff"
 #define CAFF_1_CREDITS_PATH "../../caff_examples/1_credits_only_1.caff"
-#define CAFF_1_CREDITS_INVALID_ID_PATH "../../caff_examples/1_credits_only_invalid_id_1.caff"
+#define CAFF_1_CREDITS_EOF_PATH "../../caff_examples/1_credits_only_eof.caff"
+#define CAFF_1_CREDITS_INVALID_ID_PATH "../../caff_examples/1_credits_only_invalid_id.caff"
+#define CAFF_1_CREDITS_NONASCII_CREATOR_PATH "../../caff_examples/1_credits_only_nonascii.caff"
 #define CAFF_1_CIFF_PATH "../../caff_examples/1_ciff_only.caff"
 
 // CAFF2
@@ -158,6 +161,47 @@ TEST(lexer_test, process_header_content_4){
   fclose(fp);
 }
 
+/* process_header_check_fp
+ * check if the function can detect that the file pointer is null
+ */ 
+TEST(lexer_test, process_header_check_fp){
+
+  // Assume that the file can be opened - otherwise check the logs
+  FILE * fp = NULL;
+
+  long long num_anims;
+  frame_status_t stat;
+  stat = process_header(fp, &num_anims);    
+  
+  ASSERT_EQ(stat, LEXER_FP_ERROR);
+
+  // Close the file
+  fclose(fp);
+}
+
+/* process_header_check_eof
+ * check if the function can detect that the file pointer is null
+ */ 
+TEST(lexer_test, process_header_check_eof){
+
+  // Assume that the file can be opened - otherwise check the logs
+  FILE * fp = fopen(CAFF_1_HEADER_EOF_PATH, "rb");
+  if(fp == NULL){
+    printf("File could not be opened. \n");
+  }else{
+    printf("File opened successfully.\n");
+  }
+
+  long long num_anims;
+  frame_status_t stat;
+  stat = process_header(fp, &num_anims);    
+  
+  ASSERT_EQ(stat, LEXER_EOF_REACHED);
+
+  // Close the file
+  fclose(fp);
+}
+
 /* process_header_check_id
  * check if the function can filter out incorrect frame id for the header
  */
@@ -222,24 +266,6 @@ TEST(lexer_test, process_header_check_sizes){
   stat = process_header(fp, &num_anims);    
   
   ASSERT_EQ(stat, LEXER_INVALID_SIZES);
-
-  // Close the file
-  fclose(fp);
-}
-
-/* process_header_check_fp
- * check if the function can detect that the file pointer is null
- */ 
-TEST(lexer_test, process_header_check_fp){
-
-  // Assume that the file can be opened - otherwise check the logs
-  FILE * fp = NULL;
-
-  long long num_anims;
-  frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
-  
-  ASSERT_EQ(stat, LEXER_FP_ERROR);
 
   // Close the file
   fclose(fp);
@@ -380,6 +406,54 @@ TEST(lexer_test, process_credits_content_3){
   fclose(fp);
 }
 
+/* process_credits_check_fp
+ * check if the function can detect that the file pointer is null
+ */ 
+TEST(lexer_test, process_credits_check_fp){
+
+  // Assume that the file can be opened - otherwise check the logs
+  FILE * fp = NULL;
+
+  // Inputs
+  unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
+  unsigned char creator_buffer[100];
+  long long creator_name_len;
+
+  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);   
+  
+  ASSERT_EQ(stat, LEXER_FP_ERROR);
+
+  // Close the file
+  fclose(fp);
+}
+
+/* process_credits_check_eof
+ * check if the function can returns with the correct error code when the the end of file is reached while processing a caff
+ */ 
+TEST(lexer_test, process_credits_check_eof){
+
+  // Assume that the file can be opened - otherwise check the logs
+  FILE * fp = fopen(CAFF_1_CREDITS_EOF_PATH, "rb");
+  if(fp == NULL){
+    printf("File could not be opened. \n");
+  }else{
+    printf("File opened successfully.\n");
+  }
+
+  // Inputs
+  unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
+  unsigned char creator_buffer[100];
+  long long creator_name_len;
+
+  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+  
+  //Check if the return value is correct
+  ASSERT_EQ(stat, LEXER_EOF_REACHED);
+  
+  // Close the file
+  fclose(fp);
+}
+
 /* process_credits_invalid_id
  * check if the function can identify an incorrect frame id
  */ 
@@ -407,13 +481,13 @@ TEST(lexer_test, process_credits_invalid_id){
   fclose(fp);
 }
 
-/* process_credits_invalid_id
- * check if the function can identify an incorrect frame id
+/* process_credits_non_ascii_creator
+ * check if the function can identify that a creator name is not all ascii characters
  */ 
-TEST(lexer_test, process_credits_eof){
+TEST(lexer_test, process_credits_non_ascii_creator){
 
   // Assume that the file can be opened - otherwise check the logs
-  FILE * fp = fopen(CAFF_1_CREDITS_INVALID_ID_PATH, "rb");
+  FILE * fp = fopen(CAFF_1_CREDITS_NONASCII_CREATOR_PATH, "rb");
   if(fp == NULL){
     printf("File could not be opened. \n");
   }else{
@@ -426,31 +500,44 @@ TEST(lexer_test, process_credits_eof){
   long long creator_name_len;
 
   frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+
+  printf("Creator:\n");
+  int i;
+  for(i =0; i<creator_name_len; i++){
+    printf("%d ",creator_buffer[i]);
+  }
+  printf("\n");
   
   //Check if the return value is correct
-  ASSERT_EQ(stat, LEXER_INVALID_ID);
+  ASSERT_EQ(stat, LEXER_CREATOR_NON_ASCII);
   
   // Close the file
   fclose(fp);
 }
 
-/* process_credits_check_fp
- * check if the function can detect that the file pointer is null
+/* process_credits_creator_buffer_size
+ * check if the function returns with the correct error code if the buffer for the creator name is smaller than the name of the creator
  */ 
-TEST(lexer_test, process_credits_check_fp){
+TEST(lexer_test, process_credits_creator_buffer_size){
 
   // Assume that the file can be opened - otherwise check the logs
-  FILE * fp = NULL;
+  FILE * fp = fopen(CAFF_1_CREDITS_PATH, "rb");
+  if(fp == NULL){
+    printf("File could not be opened. \n");
+  }else{
+    printf("File opened successfully.\n");
+  }
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
-  unsigned char creator_buffer[100];
+  unsigned char creator_buffer[8];
   long long creator_name_len;
 
-  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);   
+  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 8, &creator_name_len);
   
-  ASSERT_EQ(stat, LEXER_FP_ERROR);
-
+  //Check if the return value is correct
+  ASSERT_EQ(stat, LEXER_CREATOR_BUFFER_ERROR);
+  
   // Close the file
   fclose(fp);
 }

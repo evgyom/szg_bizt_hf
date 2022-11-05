@@ -4,7 +4,7 @@
 #define CREATOR_BUF_SIZE 300
 
 frame_status_t process_header(FILE * fp, long long  * num_anims){
-    char buffer[BUF_SIZE];
+    unsigned char buffer[BUF_SIZE];
     reader_status_t stat;
 
     // Verify frame ID
@@ -69,7 +69,7 @@ frame_status_t process_header(FILE * fp, long long  * num_anims){
         return LEXER_INVALID_SIZES;
 
     // Load the num_anim part of the frame
-    reader_consume(fp, CAFF_HEADER_NUM_ANIM_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(fp, CAFF_HEADER_NUM_ANIM_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -84,8 +84,8 @@ frame_status_t process_header(FILE * fp, long long  * num_anims){
 }
 
 frame_status_t process_credits(FILE * fp, unsigned char * date, unsigned char * creator_buffer, int creator_buffer_size, long long * creator_name_length){
-    char buffer[BUF_SIZE];
-    char creator_buffer_local[CREATOR_BUF_SIZE];
+    unsigned char buffer[BUF_SIZE];
+    unsigned char creator_buffer_local[CREATOR_BUF_SIZE];
     reader_status_t stat;
 
     // Verify frame ID
@@ -138,7 +138,7 @@ frame_status_t process_credits(FILE * fp, unsigned char * date, unsigned char * 
     }
     * creator_name_length = arr_to_ll(buffer);
     if(* creator_name_length > creator_buffer_size)
-        return LEXER_BUFFER_TOO_SMALL;
+        return LEXER_CREATOR_BUFFER_ERROR;
     if(* creator_name_length >= size_of_frame)
         return LEXER_INVALID_SIZES;
 
@@ -154,8 +154,8 @@ frame_status_t process_credits(FILE * fp, unsigned char * date, unsigned char * 
     }
     // Validate if the creator name contains only ascii characters
     int i;
-    for(i = 0; i<*creator_name_length; i++){
-        if(creator_buffer_local[i] == 0 || creator_buffer_local[i] > 127)
+    for(i = 0; i<(*creator_name_length); i++){
+        if((creator_buffer_local[i] == 0) || (creator_buffer_local[i] > 127))
             return LEXER_CREATOR_NON_ASCII;
     }
     // Copy the creator name to the output buffer

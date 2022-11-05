@@ -1,25 +1,32 @@
 # CAFF parser
 
-## Tests
+## Reader level
+
+## Lexer level
+
+##
+
+# Tests
 
 ### Reader tests
 
 ### Lexer tests
 
-* For all functions
+* Process header function
+    * contents
     * null file pointer
     * eof reached
     * correct frame id
-* For process_header only
     * CAFF magic 
     * frame size matches header size and == 20
-    * header contents
 * For process_credits only
-    * credits contents
+    * contents
+    * null file pointer
+    * eof reached
+    * correct frame id
     * non-ascii creator name
-    * error with creator name buffer
+    * error with creator name buffer size
     
-
 ### Parser tests
 
 ## Todos

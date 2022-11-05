@@ -1,14 +1,29 @@
+# CAFF parser
+
+## Tests
+
+### Reader tests
+
+### Lexer tests
+
+* For all functions
+    * null file pointer
+    * eof reached
+    * correct frame id
+* For process_header only
+    * CAFF magic 
+    * frame size matches header size and == 20
+    * header contents
+* For process_credits only
+    * credits contents
+    * non-ascii creator name
+    * error with creator name buffer
+    
+
+### Parser tests
+
 ## Todos
-* complete and test process_header
-    * num_anims, frame_length
-    * with all example caffs
-* complete and test process_credits
-    * frame_length, ...
-    * with all example caffs
 * start get_ciff_frame
-    * 
-* Should we do: identify frame?
-    * Eldobom, ami nem ilyen sorrendben van?
 
 ## Parsing
 * https://prettydiff.com/2/guide/unrelated_parser.xhtml#howto-lexer

@@ -10,7 +10,6 @@ typedef enum{
     READER_FP_NULL,
     READER_BUFFER_NULL,
     READER_BUFFER_SIZE,
-    READER_CHAR_NOT_FOUND,
     READER_EOF_REACHED
 }reader_status_t;
 

@@ -22,12 +22,16 @@
 #define CAFF_ANIMATION_DURATION_BYTES 8
 
 typedef enum{
-    FRAME_OK,
-    BUFFER_TO_SMALL,
-    INVALID_ID,
-    INVALID_CAFF_MAGIC,
-    INVALID_FRAME_SIZES,
-    INVALID_FRAME
+    LEXER_FRAME_OK,
+    LEXER_BUFFER_TOO_SMALL,
+    LEXER_INVALID_ID,
+    LEXER_INVALID_CAFF_MAGIC,
+    LEXER_INVALID_SIZES,
+    LEXER_INVALID_FRAME,
+    LEXER_FP_ERROR,
+    LEXER_BUFFER_SIZE_ERROR,
+    LEXER_EOF_REACHED,
+    LEXER_CREATOR_NON_ASCII
 }frame_status_t;
 
 /* Function: process_header
@@ -55,7 +59,7 @@ frame_status_t process_header(FILE * fp, long long * num_anims);
 * Return value:
 * frame_status_t
 */
-frame_status_t process_credits(FILE * fp, char * date, char * creator_buffer, int creator_buffer_size, long long * creator_name_length);
+frame_status_t process_credits(FILE * fp, unsigned char * date, unsigned char * creator_buffer, int creator_buffer_size, long long * creator_name_length);
 
 frame_status_t process_ciff_frame(FILE * fp);
 

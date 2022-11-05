@@ -18,7 +18,7 @@ typedef enum{
 * This function writes the next n while from the file stream to the passed buffer, and restores the filepointer to its original state.
 *
 * Params:
-* fp: pointer to an opened file
+* fp: pointer to an open file
 * n: the number of characters to return
 * buffer: the characters should be written here
 * buffer_size: the size of the output buffer
@@ -29,7 +29,7 @@ reader_status_t reader_peek(FILE * fp, int n, unsigned char * buffer, int buffer
 * This function writes the next n while from the file stream to the passed buffer, and the filepointer is updated accordingly.
 *
 * Params:
-* fp: pointer to an opened file
+* fp: pointer to an open file
 * n: the number of characters to return
 * buffer: the characters should be written here
 * buffer_size: the size of the output buffer

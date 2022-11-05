@@ -1,5 +1,16 @@
 ## Todos
-* read about the gif format
+* complete and test process_header
+    * num_anims, frame_length
+    * with all example caffs
+* complete and test process_credits
+    * frame_length, ...
+    * with all example caffs
+* start get_ciff_frame
+    * 
+* Should we do: identify frame?
+    * Eldobom, ami nem ilyen sorrendben van?
+
+## Parsing
 * https://prettydiff.com/2/guide/unrelated_parser.xhtml#howto-lexer
 * https://supunsetunga.medium.com/writing-a-parser-getting-started-44ba70bb6cc9
 

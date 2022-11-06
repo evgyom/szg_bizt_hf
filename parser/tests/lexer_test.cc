@@ -577,3 +577,28 @@ TEST(lexer_test, process_credits_creator_buffer_size){
   // Close the file
   fclose(fp);
 }
+
+/* process_ciff_content_ok
+ * this test verifies if the retrieved content is correct. does not check the ciff content
+ */
+TEST(lexer_test, process_ciff_content_ok){
+  
+   // Assume that the file can be opened - otherwise check the logs
+  FILE * fp = fopen(CAFF_1_CIFF_PATH, "rb");
+  if(fp == NULL){
+    printf("File could not be opened. \n");
+  }else{
+    printf("File opened successfully.\n");
+  }
+  file_status_t file_stat = {fp, CAFF_1_CIFF_LENGTH, 0};
+
+  // Inputs
+  ciff_frame_t my_ciff;
+  my_ciff.content_buffer_ptr = (unsigned char *) malloc(CONTENT_BUFFER_SIZE * sizeof(char));
+  frame_status_t stat = process_ciff_frame(&file_stat, &my_ciff);
+
+  ASSERT_EQ(stat, LEXER_FRAME_OK);
+  
+  // Close the file
+  fclose(fp);
+}

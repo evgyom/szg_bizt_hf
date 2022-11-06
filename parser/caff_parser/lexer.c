@@ -60,7 +60,6 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
 
     long long size_of_header;
     size_of_header = arr_to_ll(buffer);
-    printf("Size of header: %d\n", size_of_header);
     // If the frame size and the header size don't match, the frame is invalid
     if(size_of_header != size_of_frame)
         return LEXER_INVALID_SIZES;
@@ -178,7 +177,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
-    if(buffer[0] != CAFF_CREDITS_ID)
+    if(buffer[0] != CAFF_ANIMATION_ID)
         return LEXER_INVALID_ID;
 
     // Get the length of the frame containg the ciff
@@ -203,10 +202,9 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
-    long long duration_of_ciff = arr_to_ll(buffer);
+    ciff->duration = arr_to_ll(buffer);
 
-    ciff_frame_t ciff_in;
-    frame_status_t ciff_stat = process_ciff(f_stat, &ciff_in);
+    frame_status_t ciff_stat = process_ciff(f_stat, ciff);
 
 }
 
@@ -225,7 +223,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
             return LEXER_EOF_REACHED;
     }
     // If the next characters are not 'CAFF' return an INVALID_FRAME error
-    if(strcmp(buffer, "CIFF") != 0)
+    if(strncmp(buffer, "CIFF", 4) != 0)
         return LEXER_INVALID_CIFF_MAGIC;
 
     // Read the header_size field
@@ -296,13 +294,14 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
             return LEXER_CIFF_CAPTION_NOT_TERMINATED;
     }
 
-    // Copy the caption to the ciff struct
+    // Copy the caption info
     memcpy(ciff->captions_buffer, caption_buffer, caption_length);
+    ciff->captions_length = caption_length;
 
     // Read the tags
     unsigned char tags_buffer[CAPTIONS_BUFFER_SIZE]; 
     int tags_length = ciff_header_size - (CIFF_MAGIC_BYTES + CIFF_HEADER_SIZE_BYTES + CIFF_CONTENT_SIZE_BYTES + CIFF_WIDTH_BYTES + CIFF_HEIGHT_BYTES + caption_length);
-    stat = reader_consume(f_stat, TAGS_BUFFER_SIZE, tags_buffer, tags_length);
+    stat = reader_consume(f_stat, tags_length, tags_buffer, TAGS_BUFFER_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -315,7 +314,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
     int tag_count = 0;
     int i;
     for(i = 0; i<tags_length; i++){
-        if(tags_buffer == '\0')
+        if(tags_buffer[i] == '\0')
             tag_count ++;
         else if(tags_buffer[i] == '\n')
             return LEXER_CIFF_INVALID_NEW_LINE;
@@ -325,6 +324,9 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
     memcpy(ciff->tags_buffer, tags_buffer, tags_length);
     ciff->number_of_tags = tag_count;
     ciff->tags_length = tags_length;
+
+    // Consume the ciff content
+    stat = reader_consume(f_stat, ciff_content_size, ciff->content_buffer_ptr, CONTENT_BUFFER_SIZE);
 
     return LEXER_FRAME_OK;
 }

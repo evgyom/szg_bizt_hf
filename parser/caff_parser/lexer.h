@@ -39,6 +39,8 @@
 #define CREATOR_BUF_SIZE 512
 #define CAPTIONS_BUFFER_SIZE 512
 #define TAGS_BUFFER_SIZE 512
+#define GIF_CONTENT_BUFFER_SIZE 2100000 // 1920x1080=2,073,600 RGB raster -> 0x5EEC00 bytes
+#define CONTENT_BUFFER_SIZE 3*GIF_CONTENT_BUFFER_SIZE // Same in RGB
 
 typedef enum{
     LEXER_FRAME_OK,
@@ -66,6 +68,8 @@ typedef struct{
     unsigned char tags_buffer[TAGS_BUFFER_SIZE];  
     long long tags_length;
     long long number_of_tags;
+    unsigned char * content_buffer_ptr; // Pointer to a buffer on the heap
+    unsigned char * gif_content_buffer_ptr; // Pointer to a buffer on the heap that contains the gif color coded values of the frame
 }ciff_frame_t;
 
 /* Function: process_header

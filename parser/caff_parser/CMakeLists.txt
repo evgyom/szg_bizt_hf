@@ -1,5 +1,5 @@
 # Create a library
-SET(lib_sources reader.c lexer.c parser.c)
+SET(lib_sources reader.c lexer.c parser.c gifenc.c color_map.c)
 add_library(caff_parser_static ${lib_sources})
 
 # Make it available for linking

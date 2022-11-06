@@ -6,3 +6,4 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_subdirectory(caff_parser)
 add_subdirectory(tests)
+add_subdirectory(debug_demo)

@@ -8,7 +8,7 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
     reader_status_t stat;
 
     // Verify frame ID
-    stat = reader_consume(&f_stat, CAFF_FRAME_ID_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_FRAME_ID_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -22,7 +22,7 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
 
     // Get the length of the header
     long long size_of_frame;
-    stat = reader_consume(&f_stat, CAFF_FRAME_LENGTH_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_FRAME_LENGTH_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -34,7 +34,7 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
     size_of_frame = arr_to_ll(buffer);
 
     // Load the CAFF Magic part of sthe frame
-    stat = reader_consume(&f_stat, CAFF_HEADER_MAGIC_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_HEADER_MAGIC_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -48,7 +48,7 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
         return LEXER_INVALID_CAFF_MAGIC;
 
     // Load the header_size part of the frame
-    stat = reader_consume(&f_stat, CAFF_HEADER_HEADER_SIZE_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_HEADER_HEADER_SIZE_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -69,7 +69,7 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
         return LEXER_INVALID_SIZES;
 
     // Load the num_anim part of the frame
-    stat = reader_consume(&f_stat, CAFF_HEADER_NUM_ANIM_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_HEADER_NUM_ANIM_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -89,7 +89,7 @@ frame_status_t process_credits(file_status_t *f_stat, unsigned char * date, unsi
     reader_status_t stat;
 
     // Verify frame ID
-    stat = reader_consume(&f_stat, CAFF_FRAME_ID_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_FRAME_ID_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -115,7 +115,7 @@ frame_status_t process_credits(file_status_t *f_stat, unsigned char * date, unsi
     size_of_frame = arr_to_ll(buffer);
 
     // Get the date of creation
-    stat = reader_consume(&f_stat, CAFF_CREDITS_DATE_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_CREDITS_DATE_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -127,7 +127,7 @@ frame_status_t process_credits(file_status_t *f_stat, unsigned char * date, unsi
     memcpy(date, buffer, CAFF_CREDITS_DATE_BYTES);
 
     // Load the length of the creator section
-    stat = reader_consume(&f_stat, CAFF_CREDITS_CREATOR_LEN_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_CREDITS_CREATOR_LEN_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -143,7 +143,7 @@ frame_status_t process_credits(file_status_t *f_stat, unsigned char * date, unsi
         return LEXER_INVALID_SIZES;
 
     // Load the creator name
-    stat = reader_consume(&f_stat, * creator_name_length, creator_buffer_local, CREATOR_BUF_SIZE);
+    stat = reader_consume(f_stat, * creator_name_length, creator_buffer_local, CREATOR_BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -169,7 +169,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
     reader_status_t stat;
 
     // Verify frame ID
-    stat = reader_consume(&f_stat, CAFF_FRAME_ID_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_FRAME_ID_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -182,7 +182,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
         return LEXER_INVALID_ID;
 
     // Get the length of the frame containg the ciff
-    stat = reader_consume(&f_stat, CAFF_FRAME_LENGTH_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_FRAME_LENGTH_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -194,7 +194,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
     long long size_of_frame = arr_to_ll(buffer);
 
     // Get the duration of the ciff animation
-    stat = reader_consume(&f_stat, CAFF_ANIMATION_DURATION_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CAFF_ANIMATION_DURATION_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -206,7 +206,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
     long long duration_of_ciff = arr_to_ll(buffer);
 
     ciff_frame_t ciff_in;
-    frame_status_t ciff_stat = process_ciff(&f_stat, &ciff_in);
+    frame_status_t ciff_stat = process_ciff(f_stat, &ciff_in);
 
 }
 
@@ -215,7 +215,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
     reader_status_t stat;
 
     // Read the CIFF magic field
-    stat = reader_consume(&f_stat, CIFF_MAGIC_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CIFF_MAGIC_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -229,7 +229,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
         return LEXER_INVALID_CIFF_MAGIC;
 
     // Read the header_size field
-    stat = reader_consume(&f_stat, CIFF_HEADER_SIZE_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CIFF_HEADER_SIZE_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -241,7 +241,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
     long long ciff_header_size = arr_to_ll(buffer);
 
     // Read the content size
-    stat = reader_consume(&f_stat, CIFF_CONTENT_SIZE_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CIFF_CONTENT_SIZE_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -253,7 +253,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
     long long ciff_content_size = arr_to_ll(buffer);
 
     // Read the width
-    stat = reader_consume(&f_stat, CIFF_WIDTH_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CIFF_WIDTH_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -265,7 +265,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
     long long ciff_width = arr_to_ll(buffer);
 
     // Read the height
-    stat = reader_consume(&f_stat, CIFF_HEIGHT_BYTES, buffer, BUF_SIZE);
+    stat = reader_consume(f_stat, CIFF_HEIGHT_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -286,7 +286,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
     // Read the caption
     unsigned char caption_buffer[CAPTIONS_BUFFER_SIZE]; 
     int caption_length;
-    stat = reader_until_char(&f_stat, CIFF_CAPTION_END, caption_buffer, CAPTIONS_BUFFER_SIZE, & caption_length);
+    stat = reader_until_char(f_stat, CIFF_CAPTION_END, caption_buffer, CAPTIONS_BUFFER_SIZE, & caption_length);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
@@ -302,7 +302,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
     // Read the tags
     unsigned char tags_buffer[CAPTIONS_BUFFER_SIZE]; 
     int tags_length = ciff_header_size - (CIFF_MAGIC_BYTES + CIFF_HEADER_SIZE_BYTES + CIFF_CONTENT_SIZE_BYTES + CIFF_WIDTH_BYTES + CIFF_HEIGHT_BYTES + caption_length);
-    stat = reader_consume(&f_stat, TAGS_BUFFER_SIZE, tags_buffer, tags_length);
+    stat = reader_consume(f_stat, TAGS_BUFFER_SIZE, tags_buffer, tags_length);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;

@@ -10,17 +10,20 @@ reader_status_t reader_peek(file_status_t *f_stat, int n, unsigned char * buffer
     if(f_stat->fp == NULL)
         return READER_FP_NULL;
     if(n > buffer_size)
-        return READER_BUFFER_SIZE;    
+        return READER_BUFFER_SIZE;   
+
+    long long loc_copy = f_stat->loc; 
 
     // Read values to the buffer
     int i;
     for(i=0; i<n; i++){
-        unsigned char char_in = getc(f_stat->fp);
-        if(char_in == UNSIGNED_EOF){
+        // Check if EOF
+        if(loc_copy >= f_stat->file_size)
             return READER_EOF_REACHED;
-        }else{
-            buffer[i] = char_in;
-        }
+        unsigned char char_in = getc(f_stat->fp);
+        //Increment the location in the file
+        loc_copy++;
+        buffer[i] = char_in;
     }
 
     // Move back the file pointer
@@ -42,12 +45,13 @@ reader_status_t reader_consume(file_status_t *f_stat, int n, unsigned char * buf
     // Read values to the buffer
     int i;
     for(i=0; i<n; i++){
-        unsigned char char_in = getc(f_stat->fp);
-        if(char_in == UNSIGNED_EOF){
+        // Check if EOF
+        if(f_stat->loc >= f_stat->file_size)
             return READER_EOF_REACHED;
-        }else{
-            buffer[i] = char_in;
-        }
+        unsigned char char_in = getc(f_stat->fp);
+        //Increment the location in the file
+        f_stat->loc++;
+        buffer[i] = char_in;
     }
 
     return READER_STATUS_SUCCESS;
@@ -66,13 +70,15 @@ reader_status_t reader_until_char(file_status_t *f_stat, unsigned char char_unti
     // Read values to the buffer
     int i;
     for(i=0; i<buffer_size; i++){
-        unsigned char char_in = getc(f_stat->fp);
-        if(char_in == UNSIGNED_EOF)
+        // Check if EOF
+        if(f_stat->loc >= f_stat->file_size)
             return READER_EOF_REACHED;
-        
+        unsigned char char_in = getc(f_stat->fp);
+        //Increment the location in the file
+        f_stat->loc++;
         buffer[i] = char_in;
+        // Increment the read buffer size
         (* read_size)++;
-
         // If the searched character is reached return with SUCCESS
         if(char_in == char_until)
             return READER_STATUS_SUCCESS;

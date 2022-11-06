@@ -7,7 +7,7 @@
 typedef struct{
     FILE * fp; // Open file pointer
     long long file_size; // The length of the file in bytes
-    long long loc; // Location inside the file
+    long long loc; // Location inside the file (the number of the next byte in the file stream)
 }file_status_t;
 
 // Reader function return statuses

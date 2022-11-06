@@ -19,17 +19,40 @@ extern "C"{
 #define CAFF_1_CREDITS_NONASCII_CREATOR_PATH "../../caff_examples/1_credits_only_nonascii.caff"
 #define CAFF_1_CIFF_PATH "../../caff_examples/1_ciff_only.caff"
 
+#define CAFF_1_LENGTH 0x3D11D4
+#define CAFF_1_HEADER_1_LENGTH 0x1D
+#define CAFF_1_HEADER_2_LENGTH 0x1D
+#define CAFF_1_HEADER_INVALID_ID_LENGTH 0x1D
+#define CAFF_1_HEADER_INVALID_MAGIC_LENGTH 0x1D
+#define CAFF_1_HEADER_INVALID_SIZES_LENGTH 0x1D
+#define CAFF_1_HEADER_EOF_LENGTH 0x1C
+#define CAFF_1_CREDITS_LENGTH 0x23
+#define CAFF_1_CREDITS_EOF_LENGTH 0x22
+#define CAFF_1_CREDITS_INVALID_ID_LENGTH 0x23
+#define CAFF_1_CREDITS_NONASCII_CREATOR_LENGTH 0x23
+#define CAFF_1_CIFF_LENGTH 0x1E88D4
+
 // CAFF2
 #define CAFF_2_PATH "../../caff_examples/2.caff"
 #define CAFF_2_HEADER_PATH "../../caff_examples/2_header_only.caff"
 #define CAFF_2_CREDITS_PATH "../../caff_examples/2_credits_only.caff"
 #define CAFF_2_CIFF_PATH "../../caff_examples/2_ciff_only.caff"
 
+#define CAFF_2_LENGTH 0x7A236A
+#define CAFF_2_HEADER_LENGTH 0x1D
+#define CAFF_2_CREDITS_LENGTH 0x25
+#define CAFF_2_CIFF_LENGTH 0x1E88D4
+
 // CAFF 3
 #define CAFF_3_PATH "../../caff_examples/3.caff"
 #define CAFF_3_HEADER_PATH "../../caff_examples/3_header_only.caff"
 #define CAFF_3_CREDITS_PATH "../../caff_examples/3_credits_only.caff"
 #define CAFF_3_CIFF_PATH "../../caff_examples/3_ciff_only.caff"
+
+#define CAFF_3_LENGTH 0x3D11C8
+#define CAFF_3_HEADER_LENGTH 0x1D
+#define CAFF_3_CREDITS_LENGTH 0x17
+#define CAFF_3_CIFF_LENGTH 0x1E88D4
 
 /* arr_to_ll_test_1
  * little endian array. only one byte.
@@ -62,8 +85,7 @@ TEST(lexer_test, process_header_content_1){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_HEADER_1_LENGTH, 0};
 
   long long num_anims;
   frame_status_t stat;
@@ -91,8 +113,7 @@ TEST(lexer_test, process_header_content_2){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;  
+  file_status_t file_stat = {fp, CAFF_1_HEADER_2_LENGTH, 0};  
 
   long long num_anims;
   frame_status_t stat;
@@ -120,8 +141,7 @@ TEST(lexer_test, process_header_content_3){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_2_HEADER_LENGTH, 0};
 
   long long num_anims;
   frame_status_t stat;
@@ -149,8 +169,7 @@ TEST(lexer_test, process_header_content_4){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_3_LENGTH, 0};
 
   long long num_anims;
   frame_status_t stat;
@@ -172,8 +191,7 @@ TEST(lexer_test, process_header_check_fp){
 
   // Assume that the file can be opened - otherwise check the logs
   FILE * fp = NULL;
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_LENGTH, 0};
 
   long long num_anims;
   frame_status_t stat;
@@ -197,8 +215,7 @@ TEST(lexer_test, process_header_check_eof){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_HEADER_EOF_LENGTH, 0};
 
   long long num_anims;
   frame_status_t stat;
@@ -222,8 +239,7 @@ TEST(lexer_test, process_header_check_id){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_HEADER_INVALID_ID_LENGTH, 0};
 
   long long num_anims;
   frame_status_t stat;
@@ -247,8 +263,7 @@ TEST(lexer_test, process_header_check_magic){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_HEADER_INVALID_MAGIC_LENGTH, 0};
 
   long long num_anims;
   frame_status_t stat;
@@ -272,8 +287,7 @@ TEST(lexer_test, process_header_check_sizes){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_HEADER_INVALID_SIZES_LENGTH, 0};
 
   long long num_anims;
   frame_status_t stat;
@@ -297,8 +311,7 @@ TEST(lexer_test, process_credits_content_1){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_CREDITS_LENGTH, 0};
 
   // Expected outputs
   unsigned char correct_date[CAFF_CREDITS_DATE_BYTES] = {0xe4, 0x07, 0x07, 0x02, 0x0e, 0x32};
@@ -343,8 +356,7 @@ TEST(lexer_test, process_credits_content_2){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_2_CREDITS_LENGTH, 0};
 
   // Expected outputs
   unsigned char correct_date[CAFF_CREDITS_DATE_BYTES] = {0xe4, 0x07, 0x07, 0x02, 0x0e, 0x32};
@@ -391,8 +403,7 @@ TEST(lexer_test, process_credits_content_3){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_3_CREDITS_LENGTH, 0};
 
   // Expected outputs
   unsigned char correct_date[CAFF_CREDITS_DATE_BYTES] = {0xe4, 0x07, 0x07, 0x02, 0x0e, 0x32};
@@ -433,8 +444,7 @@ TEST(lexer_test, process_credits_check_fp){
 
   // Assume that the file can be opened - otherwise check the logs
   FILE * fp = NULL;
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_LENGTH, 0};
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
@@ -461,8 +471,7 @@ TEST(lexer_test, process_credits_check_eof){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_CREDITS_EOF_LENGTH, 0};
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
@@ -490,8 +499,7 @@ TEST(lexer_test, process_credits_invalid_id){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_CREDITS_INVALID_ID_LENGTH, 0};
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
@@ -519,8 +527,7 @@ TEST(lexer_test, process_credits_non_ascii_creator){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_CREDITS_NONASCII_CREATOR_LENGTH, 0};
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
@@ -555,8 +562,7 @@ TEST(lexer_test, process_credits_creator_buffer_size){
   }else{
     printf("File opened successfully.\n");
   }
-  file_status_t file_stat;
-  file_stat.fp = fp;
+  file_status_t file_stat = {fp, CAFF_1_CREDITS_LENGTH, 0};
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];

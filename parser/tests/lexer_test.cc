@@ -49,6 +49,24 @@ TEST(lexer_test, arr_to_ll_test_2){
   ASSERT_EQ(out, 6+256*120);
 }
 
+/* tag_counter_1
+ * little endian array. two bytes.
+ */
+TEST(lexer_test, arr_to_ll_test_2){
+  unsigned char buffer[] = {'h','i','\0','t','a','g','\0'};
+  long long out = number_of_tags(buffer, 2+1+3+1);
+  ASSERT_EQ(out, 2);
+}
+
+/* tag_counter_1
+ * little endian array. two bytes.
+ */
+TEST(lexer_test, arr_to_ll_test_2){
+  unsigned char buffer[] = +'\0'+'hi2'+'\0';
+  long long out = number_of_tags(buffer, 2+1+3+1);
+  ASSERT_EQ(out, 2);
+}
+
 /* process_header_content_1
  * check if the function extracts the correct number of animations from the header
  * input file: caff_1 header only

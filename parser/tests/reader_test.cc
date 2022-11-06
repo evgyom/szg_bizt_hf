@@ -6,6 +6,7 @@ extern "C"{
 }
 
 #define READER_TEST_CAFF_PATH "../../caff_examples/reader_test.caff"
+#define READER_TEST_CAFF_NOL_PATH "../../caff_examples/reader_test_no_l.caff"
 #define BUFFER_SIZE 300
 #define FILE_LENGTH 255
 
@@ -362,6 +363,129 @@ TEST(reader_test, consume_fp_after){
   //Check the return value - the buffer should contain the values after 'num' bytes
   for(int i = 0; i<num; i++){
     ASSERT_EQ(correct_test_buffer[i+num], buffer[i]);
+  }
+
+  // Close the file
+  fclose(fp);
+}
+
+/* read_until_buffer_np
+ * Check if the function returns with the correct error code, when the given buffer is a null pointer.  
+ */ 
+TEST(reader_test, read_until_buffer_np){
+
+  // Assume that the file can be opened
+  FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+
+  // Inputs - buffer is null pointer
+  int read_size = 0;
+  unsigned char * buffer = NULL;
+  unsigned char c = 'l';
+
+  // Call the function
+  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+
+  // Assert the correct return status
+  ASSERT_EQ(stat, READER_BUFFER_NULL);
+
+  // Close the file
+  fclose(fp);
+}
+
+/* read_until_fp_np
+ * Check if the function returns with the correct error code, when the given file pointer is a null pointer.  
+ */ 
+TEST(reader_test, read_until_fp_np){
+
+  // File cannot be opened
+  FILE * fp = NULL;
+
+  // Inputs - buffer is null pointer
+  int read_size = 0;
+  unsigned char buffer[BUFFER_SIZE];
+  unsigned char c = 'l';
+
+  // Call the function
+  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+
+  // Assert the correct return status
+  ASSERT_EQ(stat, READER_FP_NULL);
+
+  // Close the file
+  fclose(fp);
+}
+
+/* read_until_eof
+ * Check if the function returns with the correct error code, when eof is reached. 
+ */ 
+TEST(reader_test, read_until_eof){
+
+  // Assume that the file can be opened
+  FILE * fp = fopen(READER_TEST_CAFF_NOL_PATH, "rb");
+
+  // Inputs - the character is not found in the input file and the buffer_size is bigger than the file length
+  int read_size = 0;
+  unsigned char buffer[BUFFER_SIZE];
+  unsigned char c = 'l';
+
+  // Call the function
+  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+
+  // Assert the correct return status
+  ASSERT_EQ(stat, READER_EOF_REACHED);
+
+  // Close the file
+  fclose(fp);
+}
+
+/* read_until_basic_ok
+ * Check if the function returns with the correct status code, when all the inputs are correct 
+ */ 
+TEST(reader_test, read_until_basic_ok){
+
+  // Assume that the file can be opened
+  FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+
+  // Inputs
+  int read_size = 0;
+  unsigned char buffer[BUFFER_SIZE];
+  unsigned char c = 'l';
+
+  // Call the function
+  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+
+  // Assert the correct return status
+  ASSERT_EQ(stat, READER_STATUS_SUCCESS);
+
+  // Close the file
+  fclose(fp);
+}
+
+/* read_until_content_ok
+ * Check if the function retrieves the correct characters from the file. 
+ */ 
+TEST(reader_test, read_until_content_ok){
+
+  // Assume that the file can be opened
+  FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+
+  // Inputs
+  int read_size = 0;
+  unsigned char buffer[BUFFER_SIZE];
+  unsigned char c = 'l';
+
+  // Call the function
+  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+
+  // Assert the correct return status
+  ASSERT_EQ(stat, READER_STATUS_SUCCESS);
+
+  // Assert the correct read_size
+  ASSERT_EQ(read_size, c + 1);
+
+  //Check the return value
+  for(int i = 0; i<read_size; i++){
+    ASSERT_EQ(correct_test_buffer[i], buffer[i]);
   }
 
   // Close the file

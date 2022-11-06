@@ -1,7 +1,7 @@
 #include "lexer.h"
 
-#define BUF_SIZE 50
-#define CREATOR_BUF_SIZE 300
+/* Private functions */
+frame_status_t process_ciff(FILE * fp, ciff_frame_t * ciff);
 
 frame_status_t process_header(FILE * fp, long long  * num_anims){
     unsigned char buffer[BUF_SIZE];
@@ -164,9 +164,174 @@ frame_status_t process_credits(FILE * fp, unsigned char * date, unsigned char * 
     return LEXER_FRAME_OK;
 }
 
+frame_status_t process_ciff_frame(FILE * fp, ciff_frame_t * ciff){
+    unsigned char buffer[BUF_SIZE];
+    reader_status_t stat;
+
+    // Verify frame ID
+    stat = reader_consume(fp, CAFF_FRAME_ID_BYTES, buffer, BUF_SIZE);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
+    if(buffer[0] != CAFF_CREDITS_ID)
+        return LEXER_INVALID_ID;
+
+    // Get the length of the frame containg the ciff
+    stat = reader_consume(fp, CAFF_FRAME_LENGTH_BYTES, buffer, BUF_SIZE);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
+    long long size_of_frame = arr_to_ll(buffer);
+
+    // Get the duration of the ciff animation
+    stat = reader_consume(fp, CAFF_ANIMATION_DURATION_BYTES, buffer, BUF_SIZE);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
+    long long duration_of_ciff = arr_to_ll(buffer);
+
+    ciff_frame_t ciff_in;
+    frame_status_t ciff_stat = process_ciff(fp, &ciff_in);
+
+}
+
+frame_status_t process_ciff(FILE * fp, ciff_frame_t * ciff){
+    unsigned char buffer[BUF_SIZE];
+    reader_status_t stat;
+
+    // Read the CIFF magic field
+    stat = reader_consume(fp, CIFF_MAGIC_BYTES, buffer, BUF_SIZE);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
+    // If the next characters are not 'CAFF' return an INVALID_FRAME error
+    if(strcmp(buffer, "CIFF") != 0)
+        return LEXER_INVALID_CIFF_MAGIC;
+
+    // Read the header_size field
+    stat = reader_consume(fp, CIFF_HEADER_SIZE_BYTES, buffer, BUF_SIZE);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
+    long long ciff_header_size = arr_to_ll(buffer);
+
+    // Read the content size
+    stat = reader_consume(fp, CIFF_CONTENT_SIZE_BYTES, buffer, BUF_SIZE);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
+    long long ciff_content_size = arr_to_ll(buffer);
+
+    // Read the width
+    stat = reader_consume(fp, CIFF_WIDTH_BYTES, buffer, BUF_SIZE);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
+    long long ciff_width = arr_to_ll(buffer);
+
+    // Read the height
+    stat = reader_consume(fp, CIFF_HEIGHT_BYTES, buffer, BUF_SIZE);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
+    long long ciff_height = arr_to_ll(buffer);
+
+    if(ciff_content_size != ciff_height * ciff_width * 3)
+        return LEXER_INVALID_CIFF_CONTENT_SIZE;
+    
+    // Write the height and width of the ciff to the output frame
+    ciff->height = ciff_height;
+    ciff->width = ciff_width;
+
+    // Read the caption
+    unsigned char caption_buffer[CAPTIONS_BUFFER_SIZE]; 
+    int caption_length;
+    stat = reader_until_char(fp, CIFF_CAPTION_END, caption_buffer, CAPTIONS_BUFFER_SIZE, & caption_length);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+        if(stat == READER_CHAR_NOT_FOUND)
+            return LEXER_CIFF_CAPTION_NOT_TERMINATED;
+    }
+
+    // Copy the caption to the ciff struct
+    memcpy(ciff->captions_buffer, caption_buffer, caption_length);
+
+    // Read the tags
+    unsigned char tags_buffer[CAPTIONS_BUFFER_SIZE]; 
+    int tags_length = ciff_header_size - (CIFF_MAGIC_BYTES + CIFF_HEADER_SIZE_BYTES + CIFF_CONTENT_SIZE_BYTES + CIFF_WIDTH_BYTES + CIFF_HEIGHT_BYTES + caption_length);
+    stat = reader_consume(fp, TAGS_BUFFER_SIZE, tags_buffer, tags_length);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
+
+    int tag_count = 0;
+    int i;
+    for(i = 0; i<tags_length; i++){
+        if(tags_buffer == '\0')
+            tag_count ++;
+        else if(tags_buffer[i] == '\n')
+            return LEXER_CIFF_INVALID_NEW_LINE;
+    }
+
+    //Copy the tags info
+    memcpy(ciff->tags_buffer, tags_buffer, tags_length);
+    ciff->number_of_tags = tag_count;
+    ciff->tags_length = tags_length;
+
+    return LEXER_FRAME_OK;
+}
+
 long long arr_to_ll(unsigned char * buffer){
     long long retval = 0;
-    
+
     // Enforce little-endiannes
     int i;
     for(i = 0; i<8; i++){

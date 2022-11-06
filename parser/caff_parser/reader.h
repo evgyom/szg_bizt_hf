@@ -10,7 +10,8 @@ typedef enum{
     READER_FP_NULL,
     READER_BUFFER_NULL,
     READER_BUFFER_SIZE,
-    READER_EOF_REACHED
+    READER_EOF_REACHED,
+    READER_CHAR_NOT_FOUND
 }reader_status_t;
 
 /* Function: peek
@@ -34,5 +35,12 @@ reader_status_t reader_peek(FILE * fp, int n, unsigned char * buffer, int buffer
 * buffer_size: the size of the output buffer
 */
 reader_status_t reader_consume(FILE * fp, int n, unsigned char * buffer, int buffer_size);
+
+/*
+ *
+ *
+ * 
+ */
+reader_status_t reader_until_char(FILE * fp, unsigned char char_until, unsigned char * buffer, int buffer_size, int * read_size);
 
 #endif

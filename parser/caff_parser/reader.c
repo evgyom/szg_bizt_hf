@@ -3,11 +3,11 @@
 #define UNSIGNED_EOF 255
 
 /* Function: peek */
-reader_status_t reader_peek(FILE * fp, int n, unsigned char * buffer, int buffer_size){
+reader_status_t reader_peek(file_status_t *f_stat, int n, unsigned char * buffer, int buffer_size){
     // Validate input parameters
     if(buffer == NULL)
         return READER_BUFFER_NULL;
-    if(fp == NULL)
+    if(f_stat->fp == NULL)
         return READER_FP_NULL;
     if(n > buffer_size)
         return READER_BUFFER_SIZE;    
@@ -15,7 +15,7 @@ reader_status_t reader_peek(FILE * fp, int n, unsigned char * buffer, int buffer
     // Read values to the buffer
     int i;
     for(i=0; i<n; i++){
-        unsigned char char_in = getc(fp);
+        unsigned char char_in = getc(f_stat->fp);
         if(char_in == UNSIGNED_EOF){
             return READER_EOF_REACHED;
         }else{
@@ -24,17 +24,17 @@ reader_status_t reader_peek(FILE * fp, int n, unsigned char * buffer, int buffer
     }
 
     // Move back the file pointer
-    fseek(fp, ((int) sizeof(char)) * (-n), SEEK_CUR);
+    fseek(f_stat->fp, ((int) sizeof(char)) * (-n), SEEK_CUR);
 
     return READER_STATUS_SUCCESS;
 }
 
 /* Function: consume */
-reader_status_t reader_consume(FILE * fp, int n, unsigned char * buffer, int buffer_size){
+reader_status_t reader_consume(file_status_t *f_stat, int n, unsigned char * buffer, int buffer_size){
     // Validate input parameters
     if(buffer == NULL)
         return READER_BUFFER_NULL;
-    if(fp == NULL)
+    if(f_stat->fp == NULL)
         return READER_FP_NULL;
     if(n > buffer_size)
         return READER_BUFFER_SIZE;      
@@ -42,7 +42,7 @@ reader_status_t reader_consume(FILE * fp, int n, unsigned char * buffer, int buf
     // Read values to the buffer
     int i;
     for(i=0; i<n; i++){
-        unsigned char char_in = getc(fp);
+        unsigned char char_in = getc(f_stat->fp);
         if(char_in == UNSIGNED_EOF){
             return READER_EOF_REACHED;
         }else{
@@ -53,11 +53,11 @@ reader_status_t reader_consume(FILE * fp, int n, unsigned char * buffer, int buf
     return READER_STATUS_SUCCESS;
 }
 
-reader_status_t reader_until_char(FILE * fp, unsigned char char_until, unsigned char * buffer, int buffer_size, int * read_size){
+reader_status_t reader_until_char(file_status_t *f_stat, unsigned char char_until, unsigned char * buffer, int buffer_size, int * read_size){
     // Validate input parameters
     if(buffer == NULL)
         return READER_BUFFER_NULL;
-    if(fp == NULL)
+    if(f_stat->fp == NULL)
         return READER_FP_NULL;
 
     // Clear the 
@@ -66,7 +66,7 @@ reader_status_t reader_until_char(FILE * fp, unsigned char char_until, unsigned 
     // Read values to the buffer
     int i;
     for(i=0; i<buffer_size; i++){
-        unsigned char char_in = getc(fp);
+        unsigned char char_in = getc(f_stat->fp);
         if(char_in == UNSIGNED_EOF)
             return READER_EOF_REACHED;
         

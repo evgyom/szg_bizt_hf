@@ -2,7 +2,13 @@
 #define READER_H
 
 #include <stdio.h>
-#include <stdbool.h>
+
+// Parser status type
+typedef struct{
+    FILE * fp; // Open file pointer
+    long long file_size; // The length of the file in bytes
+    long long loc; // Location inside the file
+}file_status_t;
 
 // Reader function return statuses
 typedef enum{
@@ -23,7 +29,7 @@ typedef enum{
 * buffer: the characters should be written here
 * buffer_size: the size of the output buffer
 */
-reader_status_t reader_peek(FILE * fp, int n, unsigned char * buffer, int buffer_size);
+reader_status_t reader_peek(file_status_t *f_stat, int n, unsigned char * buffer, int buffer_size);
 
 /* Function: consume
 * This function writes the next n while from the file stream to the passed buffer, and the filepointer is updated accordingly.
@@ -34,13 +40,13 @@ reader_status_t reader_peek(FILE * fp, int n, unsigned char * buffer, int buffer
 * buffer: the characters should be written here
 * buffer_size: the size of the output buffer
 */
-reader_status_t reader_consume(FILE * fp, int n, unsigned char * buffer, int buffer_size);
+reader_status_t reader_consume(file_status_t *f_stat, int n, unsigned char * buffer, int buffer_size);
 
 /*
  *
  *
  * 
  */
-reader_status_t reader_until_char(FILE * fp, unsigned char char_until, unsigned char * buffer, int buffer_size, int * read_size);
+reader_status_t reader_until_char(file_status_t *f_stat, unsigned char char_until, unsigned char * buffer, int buffer_size, int * read_size);
 
 #endif

@@ -11,11 +11,15 @@ int parse(char * path){
         return 1;
     }
 
+    file_status_t file_stat;
+    file_stat.fp = fp;
+
+    // Frame status
     frame_status_t stat;
 
     // Read header
     long long num_anims;
-    stat = process_header(fp, &num_anims);    
+    stat = process_header(&file_stat, &num_anims);    
     printf("Process header returned with status: %d\n", stat);
     printf("CAFF header processed. Number of CIFFs in CAFF: %d\n", num_anims);
 
@@ -24,7 +28,7 @@ int parse(char * path){
     unsigned char creator_buffer[100];
     long long creator_name_len;
 
-    stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+    stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
     printf("Process credits returned with status: %d\n", stat);
 
     printf("Date:\n");

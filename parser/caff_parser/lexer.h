@@ -78,7 +78,7 @@ typedef struct{
 * Return value:
 * frame_status_t
 */
-frame_status_t process_header(FILE * fp, long long * num_anims);
+frame_status_t process_header(file_status_t *f_stat, long long * num_anims);
 
 /* Function: process_credits
 * This function extracts the contents of the credits frame of the CAFF file. The function has to be called, with the appropriate state of the file pointer.
@@ -93,7 +93,7 @@ frame_status_t process_header(FILE * fp, long long * num_anims);
 * Return value:
 * frame_status_t
 */
-frame_status_t process_credits(FILE * fp, unsigned char * date, unsigned char * creator_buffer, int creator_buffer_size, long long * creator_name_length);
+frame_status_t process_credits(file_status_t *f_stats, unsigned char * date, unsigned char * creator_buffer, int creator_buffer_size, long long * creator_name_length);
 
 /* Function: process_credits
 * This function extracts the contents of the credits frame of the CAFF file. The function has to be called, with the appropriate state of the file pointer.
@@ -103,7 +103,7 @@ frame_status_t process_credits(FILE * fp, unsigned char * date, unsigned char * 
 * Return value:
 * frame_status_t
 */
-frame_status_t process_ciff_frame(FILE * fp, ciff_frame_t * ciff);
+frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff);
 
 /* Function: arr_to_ll 
  * This function converts a 8 byte buffer to a long long variable. 

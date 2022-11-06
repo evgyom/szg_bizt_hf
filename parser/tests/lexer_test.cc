@@ -49,24 +49,6 @@ TEST(lexer_test, arr_to_ll_test_2){
   ASSERT_EQ(out, 6+256*120);
 }
 
-/* tag_counter_1
- * little endian array. two bytes.
- */
-TEST(lexer_test, arr_to_ll_test_2){
-  unsigned char buffer[] = {'h','i','\0','t','a','g','\0'};
-  long long out = number_of_tags(buffer, 2+1+3+1);
-  ASSERT_EQ(out, 2);
-}
-
-/* tag_counter_1
- * little endian array. two bytes.
- */
-TEST(lexer_test, arr_to_ll_test_2){
-  unsigned char buffer[] = +'\0'+'hi2'+'\0';
-  long long out = number_of_tags(buffer, 2+1+3+1);
-  ASSERT_EQ(out, 2);
-}
-
 /* process_header_content_1
  * check if the function extracts the correct number of animations from the header
  * input file: caff_1 header only
@@ -75,16 +57,17 @@ TEST(lexer_test, process_header_content_1){
 
   // Assume that the file can be opened - otherwise check the logs
   FILE * fp = fopen(CAFF_1_HEADER_1_PATH, "rb");
-
   if(fp == NULL){
     printf("File could not be opened. \n");
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   long long num_anims;
   frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
+  stat = process_header(&file_stat, &num_anims);    
 
   // Check if the return status is oks
   ASSERT_EQ(stat, LEXER_FRAME_OK);
@@ -103,16 +86,17 @@ TEST(lexer_test, process_header_content_2){
 
   // Assume that the file can be opened - otherwise check the logs
   FILE * fp = fopen(CAFF_1_HEADER_2_PATH, "rb");
-
   if(fp == NULL){
     printf("File could not be opened. \n");
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;  
 
   long long num_anims;
   frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
+  stat = process_header(&file_stat, &num_anims);    
 
   // Check if the return status is oks
   ASSERT_EQ(stat, LEXER_FRAME_OK);
@@ -131,18 +115,19 @@ TEST(lexer_test, process_header_content_3){
 
   // Assume that the file can be opened - otherwise check the logs
   FILE * fp = fopen(CAFF_2_HEADER_PATH, "rb");
-
   if(fp == NULL){
     printf("File could not be opened. \n");
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   long long num_anims;
   frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
+  stat = process_header(&file_stat, &num_anims);    
 
-  // Check if the return status is oks
+  // Check if the return status is ok
   ASSERT_EQ(stat, LEXER_FRAME_OK);
   // Check if the numberof animatiosn is correctly extracted
   ASSERT_EQ(num_anims, 4);
@@ -159,16 +144,17 @@ TEST(lexer_test, process_header_content_4){
 
   // Assume that the file can be opened - otherwise check the logs
   FILE * fp = fopen(CAFF_3_PATH, "rb");
-
   if(fp == NULL){
     printf("File could not be opened. \n");
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   long long num_anims;
   frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
+  stat = process_header(&file_stat, &num_anims);    
 
   // Check if the return status is oks
   ASSERT_EQ(stat, LEXER_FRAME_OK);
@@ -186,10 +172,12 @@ TEST(lexer_test, process_header_check_fp){
 
   // Assume that the file can be opened - otherwise check the logs
   FILE * fp = NULL;
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   long long num_anims;
   frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
+  stat = process_header(&file_stat, &num_anims);    
   
   ASSERT_EQ(stat, LEXER_FP_ERROR);
 
@@ -209,10 +197,12 @@ TEST(lexer_test, process_header_check_eof){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   long long num_anims;
   frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
+  stat = process_header(&file_stat, &num_anims);    
   
   ASSERT_EQ(stat, LEXER_EOF_REACHED);
 
@@ -232,10 +222,12 @@ TEST(lexer_test, process_header_check_id){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   long long num_anims;
   frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
+  stat = process_header(&file_stat, &num_anims);    
   
   ASSERT_EQ(stat, LEXER_INVALID_ID);
 
@@ -255,10 +247,12 @@ TEST(lexer_test, process_header_check_magic){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   long long num_anims;
   frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
+  stat = process_header(&file_stat, &num_anims);    
   
   ASSERT_EQ(stat, LEXER_INVALID_CAFF_MAGIC);
 
@@ -278,10 +272,12 @@ TEST(lexer_test, process_header_check_sizes){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   long long num_anims;
   frame_status_t stat;
-  stat = process_header(fp, &num_anims);    
+  stat = process_header(&file_stat, &num_anims);    
   
   ASSERT_EQ(stat, LEXER_INVALID_SIZES);
 
@@ -301,6 +297,8 @@ TEST(lexer_test, process_credits_content_1){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Expected outputs
   unsigned char correct_date[CAFF_CREDITS_DATE_BYTES] = {0xe4, 0x07, 0x07, 0x02, 0x0e, 0x32};
@@ -310,7 +308,7 @@ TEST(lexer_test, process_credits_content_1){
   unsigned char creator_buffer[100];
   long long creator_name_len;
 
-  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+  frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
   
   //Check if the return value is correct
   ASSERT_EQ(stat, LEXER_FRAME_OK);
@@ -345,6 +343,8 @@ TEST(lexer_test, process_credits_content_2){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Expected outputs
   unsigned char correct_date[CAFF_CREDITS_DATE_BYTES] = {0xe4, 0x07, 0x07, 0x02, 0x0e, 0x32};
@@ -355,7 +355,7 @@ TEST(lexer_test, process_credits_content_2){
   unsigned char creator_buffer[100];
   long long creator_name_len;
 
-  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+  frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
 
   //Check if the return value is correct
   ASSERT_EQ(stat, LEXER_FRAME_OK);
@@ -391,6 +391,8 @@ TEST(lexer_test, process_credits_content_3){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Expected outputs
   unsigned char correct_date[CAFF_CREDITS_DATE_BYTES] = {0xe4, 0x07, 0x07, 0x02, 0x0e, 0x32};
@@ -401,7 +403,7 @@ TEST(lexer_test, process_credits_content_3){
   unsigned char creator_buffer[100];
   long long creator_name_len;
 
-  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+  frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
   
   //Check if the return value is correct
   ASSERT_EQ(stat, LEXER_FRAME_OK);
@@ -431,13 +433,15 @@ TEST(lexer_test, process_credits_check_fp){
 
   // Assume that the file can be opened - otherwise check the logs
   FILE * fp = NULL;
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
   long long creator_name_len;
 
-  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);   
+  frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);   
   
   ASSERT_EQ(stat, LEXER_FP_ERROR);
 
@@ -457,13 +461,15 @@ TEST(lexer_test, process_credits_check_eof){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
   long long creator_name_len;
 
-  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+  frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
   
   //Check if the return value is correct
   ASSERT_EQ(stat, LEXER_EOF_REACHED);
@@ -484,13 +490,15 @@ TEST(lexer_test, process_credits_invalid_id){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
   long long creator_name_len;
 
-  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+  frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
   
   //Check if the return value is correct
   ASSERT_EQ(stat, LEXER_INVALID_ID);
@@ -511,13 +519,15 @@ TEST(lexer_test, process_credits_non_ascii_creator){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
   long long creator_name_len;
 
-  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 100, &creator_name_len);
+  frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
 
   printf("Creator:\n");
   int i;
@@ -545,13 +555,15 @@ TEST(lexer_test, process_credits_creator_buffer_size){
   }else{
     printf("File opened successfully.\n");
   }
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[8];
   long long creator_name_len;
 
-  frame_status_t stat = process_credits(fp, date_buffer, creator_buffer, 8, &creator_name_len);
+  frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 8, &creator_name_len);
   
   //Check if the return value is correct
   ASSERT_EQ(stat, LEXER_CREATOR_BUFFER_ERROR);

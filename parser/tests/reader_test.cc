@@ -36,13 +36,15 @@ TEST(reader_test, peek_buffer_np){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs - buffer is null pointer
   int num = FILE_LENGTH;
   unsigned char * buffer = NULL;
 
   // Call the function
-  reader_status_t stat = reader_peek(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_peek(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_BUFFER_NULL);
@@ -58,13 +60,15 @@ TEST(reader_test, peek_fp_np){
 
   // File cannot be opened
   FILE * fp = NULL;
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int num = FILE_LENGTH;
   unsigned char buffer[BUFFER_SIZE];
 
   // Call the function
-  reader_status_t stat = reader_peek(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_peek(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_FP_NULL);
@@ -80,6 +84,8 @@ TEST(reader_test, peek_buffer_small){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs - buffer is smaller than the number of chars to peek
   int num = FILE_LENGTH;
@@ -87,7 +93,7 @@ TEST(reader_test, peek_buffer_small){
   int buffer_size = 9;
 
   // Call the function
-  reader_status_t stat = reader_peek(fp, num, buffer, buffer_size);
+  reader_status_t stat = reader_peek(&file_stat, num, buffer, buffer_size);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_BUFFER_SIZE);
@@ -103,13 +109,15 @@ TEST(reader_test, peek_eof){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs - the number of requested bytes exceed the file length
   int num = FILE_LENGTH + 1;
   unsigned char buffer[BUFFER_SIZE]; 
 
   // Call the function
-  reader_status_t stat = reader_peek(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_peek(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_EOF_REACHED);
@@ -125,13 +133,15 @@ TEST(reader_test, peek_basic_ok){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int num = FILE_LENGTH;
   unsigned char buffer[BUFFER_SIZE]; 
 
   // Call the function
-  reader_status_t stat = reader_peek(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_peek(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);
@@ -147,13 +157,15 @@ TEST(reader_test, peek_content_ok){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int num = FILE_LENGTH;
   unsigned char buffer[BUFFER_SIZE];
 
   // Call the function
-  reader_status_t stat = reader_peek(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_peek(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);
@@ -174,19 +186,21 @@ TEST(reader_test, peek_fp_after){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int num = 20;
   unsigned char buffer[BUFFER_SIZE];
 
   // Call the function
-  reader_status_t stat = reader_peek(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_peek(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);
 
   // Call the function again
-  stat = reader_peek(fp, num, buffer, BUFFER_SIZE);
+  stat = reader_peek(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);
@@ -206,13 +220,15 @@ TEST(reader_test, consume_buffer_np){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs - buffer is null pointer
   int num = FILE_LENGTH;
   unsigned char * buffer = NULL;
 
   // Call the function
-  reader_status_t stat = reader_consume(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_consume(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_BUFFER_NULL);
@@ -228,13 +244,15 @@ TEST(reader_test, consume_fp_np){
 
   // File cannot be opened
   FILE * fp = NULL;
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int num = FILE_LENGTH;
   unsigned char buffer[BUFFER_SIZE];
 
   // Call the function
-  reader_status_t stat = reader_consume(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_consume(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_FP_NULL);
@@ -250,6 +268,8 @@ TEST(reader_test, consume_buffer_small){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs - buffer is smaller than the number of chars to consume
   int num = FILE_LENGTH;
@@ -257,7 +277,7 @@ TEST(reader_test, consume_buffer_small){
   int buffer_size = 9;
 
   // Call the function
-  reader_status_t stat = reader_consume(fp, num, buffer, buffer_size);
+  reader_status_t stat = reader_consume(&file_stat, num, buffer, buffer_size);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_BUFFER_SIZE);
@@ -273,13 +293,15 @@ TEST(reader_test, consume_eof){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs - the number of requested bytes exceed the file length
   int num = FILE_LENGTH + 1;
   unsigned char buffer[BUFFER_SIZE]; 
 
   // Call the function
-  reader_status_t stat = reader_consume(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_consume(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_EOF_REACHED);
@@ -295,13 +317,15 @@ TEST(reader_test, consume_basic_ok){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int num = FILE_LENGTH;
   unsigned char buffer[BUFFER_SIZE]; 
 
   // Call the function
-  reader_status_t stat = reader_consume(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_consume(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);
@@ -317,13 +341,15 @@ TEST(reader_test, consume_content_ok){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int num = FILE_LENGTH;
   unsigned char buffer[BUFFER_SIZE];
 
   // Call the function
-  reader_status_t stat = reader_consume(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_consume(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);
@@ -344,19 +370,21 @@ TEST(reader_test, consume_fp_after){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int num = 20;
   unsigned char buffer[BUFFER_SIZE];
 
   // Call the function
-  reader_status_t stat = reader_consume(fp, num, buffer, BUFFER_SIZE);
+  reader_status_t stat = reader_consume(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);
 
   // Call the function again
-  stat = reader_consume(fp, num, buffer, BUFFER_SIZE);
+  stat = reader_consume(&file_stat, num, buffer, BUFFER_SIZE);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);
@@ -376,6 +404,8 @@ TEST(reader_test, read_until_buffer_np){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs - buffer is null pointer
   int read_size = 0;
@@ -383,7 +413,7 @@ TEST(reader_test, read_until_buffer_np){
   unsigned char c = 'l';
 
   // Call the function
-  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+  reader_status_t stat = reader_until_char(&file_stat, c, buffer, BUFFER_SIZE, &read_size);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_BUFFER_NULL);
@@ -399,6 +429,8 @@ TEST(reader_test, read_until_fp_np){
 
   // File cannot be opened
   FILE * fp = NULL;
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs - buffer is null pointer
   int read_size = 0;
@@ -406,7 +438,7 @@ TEST(reader_test, read_until_fp_np){
   unsigned char c = 'l';
 
   // Call the function
-  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+  reader_status_t stat = reader_until_char(&file_stat, c, buffer, BUFFER_SIZE, &read_size);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_FP_NULL);
@@ -422,6 +454,8 @@ TEST(reader_test, read_until_eof){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_NOL_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs - the character is not found in the input file and the buffer_size is bigger than the file length
   int read_size = 0;
@@ -429,7 +463,7 @@ TEST(reader_test, read_until_eof){
   unsigned char c = 'l';
 
   // Call the function
-  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+  reader_status_t stat = reader_until_char(&file_stat, c, buffer, BUFFER_SIZE, &read_size);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_EOF_REACHED);
@@ -445,6 +479,8 @@ TEST(reader_test, read_until_basic_ok){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int read_size = 0;
@@ -452,7 +488,7 @@ TEST(reader_test, read_until_basic_ok){
   unsigned char c = 'l';
 
   // Call the function
-  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+  reader_status_t stat = reader_until_char(&file_stat, c, buffer, BUFFER_SIZE, &read_size);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);
@@ -468,6 +504,8 @@ TEST(reader_test, read_until_content_ok){
 
   // Assume that the file can be opened
   FILE * fp = fopen(READER_TEST_CAFF_PATH, "rb");
+  file_status_t file_stat;
+  file_stat.fp = fp;
 
   // Inputs
   int read_size = 0;
@@ -475,7 +513,7 @@ TEST(reader_test, read_until_content_ok){
   unsigned char c = 'l';
 
   // Call the function
-  reader_status_t stat = reader_until_char(fp, c, buffer, BUFFER_SIZE, &read_size);
+  reader_status_t stat = reader_until_char(&file_stat, c, buffer, BUFFER_SIZE, &read_size);
 
   // Assert the correct return status
   ASSERT_EQ(stat, READER_STATUS_SUCCESS);

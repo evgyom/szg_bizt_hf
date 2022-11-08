@@ -2,7 +2,7 @@
 
 #define UNSIGNED_EOF 255
 
-/* Function: peek */
+/* Function: reader_peek */
 reader_status_t reader_peek(file_status_t *f_stat, int n, unsigned char * buffer, int buffer_size){
     // Validate input parameters
     if(buffer == NULL)
@@ -32,7 +32,7 @@ reader_status_t reader_peek(file_status_t *f_stat, int n, unsigned char * buffer
     return READER_STATUS_SUCCESS;
 }
 
-/* Function: consume */
+/* Function: reader_consume */
 reader_status_t reader_consume(file_status_t *f_stat, int n, unsigned char * buffer, int buffer_size){
     // Validate input parameters
     if(buffer == NULL)
@@ -57,6 +57,7 @@ reader_status_t reader_consume(file_status_t *f_stat, int n, unsigned char * buf
     return READER_STATUS_SUCCESS;
 }
 
+/* Function: reader_until_char */
 reader_status_t reader_until_char(file_status_t *f_stat, unsigned char char_until, unsigned char * buffer, int buffer_size, int * read_size){
     // Validate input parameters
     if(buffer == NULL)

@@ -1,8 +1,6 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include <string.h>
-
 #include "reader.h"
 
 // Frame IDs
@@ -42,6 +40,7 @@
 #define GIF_CONTENT_BUFFER_SIZE 2100000 // 1920x1080=2,073,600 RGB raster -> 0x5EEC00 bytes
 #define CONTENT_BUFFER_SIZE 3*GIF_CONTENT_BUFFER_SIZE // Same in RGB
 
+/* Status and error codes of the lexer functions */
 typedef enum{
     LEXER_FRAME_OK,
     LEXER_CREATOR_BUFFER_ERROR,
@@ -53,12 +52,16 @@ typedef enum{
     LEXER_BUFFER_SIZE_ERROR,
     LEXER_EOF_REACHED,
     LEXER_CREATOR_NON_ASCII,
+    LEXER_CREATOR_NAME_TOO_LONG,
     LEXER_INVALID_CIFF_MAGIC,
     LEXER_INVALID_CIFF_CONTENT_SIZE,
+    LEXER_CIFF_CAPTIONS_TOO_LONG,
+    LEXER_CIFF_TAGS_TOO_LONG,
     LEXER_CIFF_CAPTION_NOT_TERMINATED,
     LEXER_CIFF_INVALID_NEW_LINE
 }frame_status_t;
 
+/* Struct to hold information about the ciff frame */
 typedef struct{
     long long duration;
     long long height;

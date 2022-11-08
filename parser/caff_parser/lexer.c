@@ -1,4 +1,6 @@
 #include "lexer.h"
+#include <string.h>
+
 
 /* Private functions */
 frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff);
@@ -57,7 +59,6 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
-
     long long size_of_header;
     size_of_header = arr_to_ll(buffer);
     // If the frame size and the header size don't match, the frame is invalid
@@ -158,6 +159,8 @@ frame_status_t process_credits(file_status_t *f_stat, unsigned char * date, unsi
             return LEXER_CREATOR_NON_ASCII;
     }
     // Copy the creator name to the output buffer
+    if(*creator_name_length > CREATOR_BUF_SIZE)
+        return LEXER_CREATOR_NAME_TOO_LONG;
     memcpy(creator_buffer, creator_buffer_local, * creator_name_length);
     
     return LEXER_FRAME_OK;
@@ -294,6 +297,10 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
             return LEXER_CIFF_CAPTION_NOT_TERMINATED;
     }
 
+    // Double check caption_length
+    if(caption_length > CAPTIONS_BUFFER_SIZE)
+        return LEXER_CIFF_CAPTIONS_TOO_LONG;
+
     // Copy the caption info
     memcpy(ciff->captions_buffer, caption_buffer, caption_length);
     ciff->captions_length = caption_length;
@@ -320,6 +327,10 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
             return LEXER_CIFF_INVALID_NEW_LINE;
     }
 
+    // Check caption_length
+    if(tags_length > TAGS_BUFFER_SIZE)
+        return LEXER_CIFF_TAGS_TOO_LONG; 
+
     //Copy the tags info
     memcpy(ciff->tags_buffer, tags_buffer, tags_length);
     ciff->number_of_tags = tag_count;
@@ -327,18 +338,24 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
 
     // Consume the ciff content
     stat = reader_consume(f_stat, ciff_content_size, ciff->content_buffer_ptr, CONTENT_BUFFER_SIZE);
+    if(stat != READER_STATUS_SUCCESS){
+        if(stat == READER_FP_NULL)
+            return LEXER_FP_ERROR;
+        if(stat == READER_BUFFER_SIZE)
+            return LEXER_BUFFER_SIZE_ERROR;
+        if(stat == READER_EOF_REACHED)
+            return LEXER_EOF_REACHED;
+    }
 
     return LEXER_FRAME_OK;
 }
 
 long long arr_to_ll(unsigned char * buffer){
     long long retval = 0;
-
     // Enforce little-endiannes
     int i;
     for(i = 0; i<8; i++){
         retval += buffer[i] * (1 << (8*i));
     }
-
     return retval;    
 }

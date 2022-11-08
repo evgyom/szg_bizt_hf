@@ -601,4 +601,7 @@ TEST(lexer_test, process_ciff_content_ok){
   
   // Close the file
   fclose(fp);
+
+  //free heap
+  free(my_ciff.content_buffer_ptr);
 }

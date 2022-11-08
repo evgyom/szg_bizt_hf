@@ -21,11 +21,6 @@ add_executable(lexer_test "lexer_test.cc")
 target_include_directories(lexer_test PRIVATE caff_parser)
 target_link_libraries(lexer_test GTest::gtest_main caff_parser_static)
 
-add_executable(other_tests "other_tests.cc")
-target_include_directories(other_tests PRIVATE caff_parser)
-target_link_libraries(other_tests GTest::gtest_main caff_parser_static)
-
 include(GoogleTest)
 gtest_discover_tests(reader_test)
 gtest_discover_tests(lexer_test)
-gtest_discover_tests(other_tests)

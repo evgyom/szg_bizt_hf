@@ -37,8 +37,8 @@
 #define CREATOR_BUF_SIZE 512
 #define CAPTIONS_BUFFER_SIZE 512
 #define TAGS_BUFFER_SIZE 512
-#define GIF_CONTENT_BUFFER_SIZE 2100000 // 1920x1080=2,073,600 RGB raster -> 0x5EEC00 bytes
-#define CONTENT_BUFFER_SIZE 3*GIF_CONTENT_BUFFER_SIZE // Same in RGB
+#define CIFF_MAX_PIXELS 2100000 // 1920x1080=2,073,600
+#define CONTENT_BUFFER_SIZE CIFF_MAX_PIXELS*3
 
 /* Status and error codes of the lexer functions */
 typedef enum{
@@ -63,7 +63,7 @@ typedef enum{
 
 /* Struct to hold information about the ciff frame */
 typedef struct{
-    long long duration;
+    long long duration; 
     long long height;
     long long width;
     unsigned char captions_buffer[CAPTIONS_BUFFER_SIZE];
@@ -112,14 +112,18 @@ frame_status_t process_credits(file_status_t *f_stats, unsigned char * date, uns
 */
 frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff);
 
+/* Function: 
+ *
+ *
+ * 
+ * 
+ */
+int add_alpha_to_rgb(ciff_frame_t ciff_in, long long n_pixels);
+
+
 /* Function: arr_to_ll 
  * This function converts a 8 byte buffer to a long long variable. 
  */
 long long arr_to_ll(unsigned char * buffer);
-
-/* Function: number_of_tags
- * This function counts the ciff tag separators in an array
- */
-int number_of_tags(unsigned char * buffer, int buffer_size);
 
 #endif

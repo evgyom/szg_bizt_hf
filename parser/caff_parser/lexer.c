@@ -5,6 +5,8 @@
 /* Private functions */
 frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff);
 
+/* Global functions */
+
 frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
     unsigned char buffer[BUF_SIZE];
     reader_status_t stat;
@@ -348,6 +350,19 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
     }
 
     return LEXER_FRAME_OK;
+}
+
+int add_alpha_to_rgb(ciff_frame_t ciff_in, long long n_pixels){
+    if(ciff_in.content_buffer_ptr == NULL)
+        return 1;
+    long long j;
+    for(j = 0; j<n_pixels; j++){
+        ciff_in.gif_content_buffer_ptr[4*j] = ciff_in.content_buffer_ptr[3*j];
+        ciff_in.gif_content_buffer_ptr[4*j+1] = ciff_in.content_buffer_ptr[3*j+1];
+        ciff_in.gif_content_buffer_ptr[4*j+2] = ciff_in.content_buffer_ptr[3*j+2];
+        ciff_in.gif_content_buffer_ptr[4*j+23] = 255;
+    }
+    return 0;
 }
 
 long long arr_to_ll(unsigned char * buffer){

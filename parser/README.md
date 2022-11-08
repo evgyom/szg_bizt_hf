@@ -1,5 +1,25 @@
 # CAFF parser
 
+## A parser használata
+
+Bemenetek:
+* path1: a bemeneti CAFF fájl elérséi útvonala
+* path2: a generálandó gif fájlneve és elérési útvonala
+* file_length: szükséges beadni a fájl hosszát, mivel a bináris fájl tartalmazhat EOF-nek minősülő 0xFF karaktereket az RGB byte-okban. A fájl méretét byte-ra pontosan megállapíthatjuk pythonban
+
+Kimenetek:
+* creator_name (pointerként átadva)
+* creator_name_length
+* date(year, month, day, hour, minute)
+* captions
+* capion_length
+* tags
+* tags_length
+* total_duration
+* frame_width
+* frame_height
+* number_of_frames
+
 ## Reader level
 
 ## Lexer level
@@ -7,7 +27,6 @@
 ## Parser level
 
 The parser uses the following library to encode the data in the GIF format.
-https://github.com/lecram/gifenc
 https://github.com/charlietangora/gif-h/blob/master/gif.h
 
 About color similiarity:

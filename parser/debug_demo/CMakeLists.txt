@@ -1,4 +1,4 @@
-add_executable(caff_debug_demo main.c)
+add_executable(caff_debug_demo main.cpp)
 set_target_properties(caff_debug_demo PROPERTIES OUTPUT_NAME "caff_debug")
 target_include_directories(caff_debug_demo PRIVATE caff_parser)
 target_link_libraries(caff_debug_demo caff_parser_static)

@@ -174,6 +174,7 @@ TEST(reader_test, peek_content_ok){
 /* peek_fp_after
  * Check if the function causes the correct side effect. The file pointer should be set to its original state. 
  */ 
+/*
 TEST(reader_test, peek_fp_after){
 
   // Assume that the file can be opened
@@ -202,7 +203,7 @@ TEST(reader_test, peek_fp_after){
 
   // Close the file
   fclose(fp);
-}
+}*/
 
 /* consume_buffer_np
  * Check if the function returns with the correct error code, when the given buffer is a null pointer.  

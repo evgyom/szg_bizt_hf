@@ -3,7 +3,7 @@
 int main(){
 
     struct_out_t struct_out;
-    char input_path[] = "../../afl_test/past_crashes/iter2/id:000003,sig:11,src:000064,op:arith8,pos:85,val:-34";
+    char input_path[] = "../../caff_examples/1.caff";
     char out_path[] = "test.gif"; 
     int file_size = 1000000;
 

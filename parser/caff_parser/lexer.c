@@ -299,8 +299,9 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
     if(caption_length > 0){
         memcpy(ciff->captions_buffer, caption_buffer, caption_length-1); // Don't copy the new line character
         ciff->captions_length = caption_length-1;
+    }else{
+        ciff->captions_length = 0;
     }
-    ciff->captions_length = 0;
 
     // Read the tags
     unsigned char tags_buffer[CAPTIONS_BUFFER_SIZE]; 
@@ -334,9 +335,10 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
     if(tags_length > 0){
         memcpy(ciff->tags_buffer, tags_buffer, tags_length-1); // Don' copy the last new line character
         ciff->tags_length = tags_length-1;
-    }    
+    }else{
+        ciff->tags_length = 0;
+    }
     ciff->number_of_tags = tag_count;
-    ciff->tags_length = 0;
 
     // Consume the ciff content
     stat = reader_consume(f_stat, ciff_content_size, ciff->content_buffer_ptr, CONTENT_BUFFER_SIZE);

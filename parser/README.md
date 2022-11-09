@@ -47,7 +47,10 @@ A parser GIF-ek létrehozásához az alábbi c++ könyvtárat használja:
 https://github.com/charlietangora/gif-h/blob/master/gif.h
 
 ## Fordítás
-A fordítást cmake-kel végezhető, mi a vscode
+
+A fordítást cmake-kel végezhető, mi a vscode. Az alábbi gcc opció a top level CMakeLists.txt-ben engedélyezve lett. 
+
+* -fstack-protector (stack smashing protection)
 
 ## Tesztek
 
@@ -91,11 +94,18 @@ Az alább vázlatosan leírt unit tesztek mind sikeresen futottak. A /tests mapp
 
 ## Statikus code analízis
 
-A kiválasztott cppcheck nevű eszköz segítségével néhány tipikus hibát észre tudtunk venni a c kódban (file pointer felszabadításának hiánya pl.). A megtalált hibák könnyen javíthatók voltak. A legutolsó report nem tartalmaz értékelhető hibát.
+A kiválasztott cppcheck nevű eszköz segítségével néhány tipikus hibát észre tudtunk venni a c kódban (file pointer felszabadításának hiánya pl.). A megtalált hibák könnyen javíthatók voltak. A legutolsó report nem tartalmaz hibát, amit érdemes lenne bemutatni.
 
 ## Input fuzzing
 
-Az AFL fuzzer
+Az AFL fuzzerrel több iterációban végeztünk fuzzolást és bugfixelést. Bemenetnek egy majdnem egész CIFF-et tartalmazó, 1 MB méretűre vágott CAFF fájl szolgált (1 MB az engedélyezett maximális). A fuzzolást az `afl_start.sh ` script indítja, ami definiálja a fordítást is. A konkrét, hibát adó bemenetek az `afl_test/past_crashes` mappában találhatók. A fájl nagy mérete miatt, és a CIFF lezáratlansága miatt azonban ez a teszt nem teljes értékű. 
 
-* Add protection flags to cmakefile
-    * https://stackoverflow.com/questions/54247344/cmake-different-compiler-flags-during-configuration
+Az alábbi táblázat mutatja az egyes iterációk részleteit. Az első két iteráció részletei hiányosak. 
+
+| Idő     | Total execs | uniq. crashes | cycles done | total paths | komment |
+|---      |---          |---            |---          |     ---     |   ---   |
+| 30 perc | ~ 1 M       | 6             |             |             | signed változó túcsordult és a buffer méret ellenőrzés elbukott. javítva. | 
+| 15 perc | ~ 500 k     | 4             |             |             | unsigned változóból kivonás. túlcsordult. javítva. |
+| 15 perc | 607 k       | 0             | 0           | 93          | itt minden rendben | 
+
+Flying Ducks

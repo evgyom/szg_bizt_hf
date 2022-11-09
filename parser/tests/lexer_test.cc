@@ -198,9 +198,6 @@ TEST(lexer_test, process_header_check_fp){
   stat = process_header(&file_stat, &num_anims);    
   
   ASSERT_EQ(stat, LEXER_FP_ERROR);
-
-  // Close the file
-  fclose(fp);
 }
 
 /* process_header_check_eof
@@ -454,9 +451,6 @@ TEST(lexer_test, process_credits_check_fp){
   frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);   
   
   ASSERT_EQ(stat, LEXER_FP_ERROR);
-
-  // Close the file
-  fclose(fp);
 }
 
 /* process_credits_check_eof

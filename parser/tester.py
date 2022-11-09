@@ -31,7 +31,7 @@ if __name__ == "__main__":
     project_root = Path.cwd()
     caff_file_path = project_root.joinpath("caff_examples").joinpath("1.caff")
     gif_out_path = project_root.joinpath("caff1.gif")
-    lib_path = project_root.joinpath("build").joinpath("caff_parser").joinpath("libcaff_parser_shared.dll")
+    lib_path = project_root.joinpath("build").joinpath("caff_parser").joinpath("libcaff_parser_shared.dll") # .so on linux
 
     # Load library
     caff_parser = CDLL(str(lib_path))

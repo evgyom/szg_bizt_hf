@@ -71,8 +71,6 @@ TEST(reader_test, peek_fp_np){
   // Assert the correct return status
   ASSERT_EQ(stat, READER_FP_NULL);
 
-  // Close the file
-  fclose(fp);
 }
 
 /* peek_buffer_small
@@ -248,8 +246,6 @@ TEST(reader_test, consume_fp_np){
   // Assert the correct return status
   ASSERT_EQ(stat, READER_FP_NULL);
 
-  // Close the file
-  fclose(fp);
 }
 
 /* consume_buffer_small
@@ -427,8 +423,6 @@ TEST(reader_test, read_until_fp_np){
   // Assert the correct return status
   ASSERT_EQ(stat, READER_FP_NULL);
 
-  // Close the file
-  fclose(fp);
 }
 
 /* read_until_eof

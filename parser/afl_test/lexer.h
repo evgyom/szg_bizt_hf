@@ -64,14 +64,14 @@ typedef enum{
 
 /* Struct to hold information about the ciff frame */
 typedef struct{
-    long long duration; 
-    long long height;
-    long long width;
+    unsigned long long duration; 
+    unsigned long long height;
+    unsigned long long width;
     unsigned char captions_buffer[CAPTIONS_BUFFER_SIZE];
-    long long captions_length;
+    unsigned long long captions_length;
     unsigned char tags_buffer[TAGS_BUFFER_SIZE];  
-    long long tags_length;
-    long long number_of_tags;
+    unsigned long long tags_length;
+    unsigned long long number_of_tags;
     unsigned char * content_buffer_ptr; // Pointer to a buffer on the heap
     unsigned char * gif_content_buffer_ptr; // Pointer to a buffer on the heap that contains the gif color coded values of the frame
 }ciff_frame_t;
@@ -86,7 +86,7 @@ typedef struct{
 * Return value:
 * frame_status_t
 */
-frame_status_t process_header(file_status_t *f_stat, long long * num_anims);
+frame_status_t process_header(file_status_t *f_stat, unsigned long long * num_anims);
 
 /* Function: process_credits
 * This function extracts the contents of the credits frame of the CAFF file. The function has to be called, with the appropriate state of the file pointer.
@@ -101,7 +101,7 @@ frame_status_t process_header(file_status_t *f_stat, long long * num_anims);
 * Return value:
 * frame_status_t
 */
-frame_status_t process_credits(file_status_t *f_stats, unsigned char * date, unsigned char * creator_buffer, int creator_buffer_size, long long * creator_name_length);
+frame_status_t process_credits(file_status_t *f_stats, unsigned char * date, unsigned char * creator_buffer, unsigned int creator_buffer_size, unsigned long long * creator_name_length);
 
 /* Function: process_credits
 * This function extracts the contents of the credits frame of the CAFF file. The function has to be called, with the appropriate state of the file pointer.
@@ -119,7 +119,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff);
  * 
  * 
  */
-int add_alpha_to_rgb(ciff_frame_t ciff_in, long long n_pixels);
+int add_alpha_to_rgb(ciff_frame_t ciff_in, unsigned long long n_pixels);
 
 
 /* Function: arr_to_ll 

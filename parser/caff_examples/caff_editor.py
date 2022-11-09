@@ -43,3 +43,7 @@ if __name__ == "__main__":
     get_section_from_binary(path_in, path_out, 29, 52)
     path_out = caff_folder.joinpath("3_ciff_only.caff")
     get_section_from_binary(path_in, path_out, 52, 2001160)
+
+    path_in = caff_folder.joinpath("1.caff")
+    path_out = caff_folder.joinpath("fuzzer.caff")
+    get_section_from_binary(path_in, path_out, 0, 1000000)

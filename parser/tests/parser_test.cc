@@ -70,7 +70,7 @@ TEST(parser_test, test_content_3){
     struct_out_t struct_out;
     char input_path[] = "../../caff_examples/3.caff";
     char out_path[] = "test.gif"; 
-    int file_size = 4002248;
+    unsigned int file_size = 4002248;
 
     int stat = parse(input_path, file_size, out_path, &struct_out);
 
@@ -101,7 +101,7 @@ TEST(parser_test, less_frames_specified){
     struct_out_t struct_out;
     char input_path[] = "../../caff_examples/1_less_frames_specified.caff";
     char out_path[] = "test.gif"; 
-    int file_size = 4002260;
+    unsigned int file_size = 4002260;
 
     int stat = parse(input_path, file_size, out_path, &struct_out);
     ASSERT_EQ(stat, CAFF_UNDEFINED_SECTION);
@@ -113,7 +113,7 @@ TEST(parser_test,more_frames_specified){
     struct_out_t struct_out;
     char input_path[] = "../../caff_examples/1_more_frames_specified.caff";
     char out_path[] = "test.gif"; 
-    int file_size = 4002260;
+    unsigned int file_size = 4002260;
 
     int stat = parse(input_path, file_size, out_path, &struct_out);
     ASSERT_NE(stat, PARSER_STATUS_OK);
@@ -125,7 +125,7 @@ TEST(parser_test,invalid_creator_len){
     struct_out_t struct_out;
     char input_path[] = "../../caff_examples/1_invalid_creator_len.caff";
     char out_path[] = "test.gif"; 
-    int file_size = 4002260;
+    unsigned int file_size = 4002260;
 
     int stat = parse(input_path, file_size, out_path, &struct_out);
     ASSERT_NE(stat, PARSER_STATUS_OK);
@@ -137,7 +137,7 @@ TEST(parser_test,invalid_caff_header_size){
     struct_out_t struct_out;
     char input_path[] = "../../caff_examples/1_invalid_caff_header_size.caff";
     char out_path[] = "test.gif"; 
-    int file_size = 4002260;
+    unsigned int file_size = 4002260;
 
     int stat = parse(input_path, file_size, out_path, &struct_out);
     ASSERT_NE(stat, PARSER_STATUS_OK);
@@ -149,7 +149,7 @@ TEST(parser_test,invalid_ciff_header_size){
     struct_out_t struct_out;
     char input_path[] = "../../caff_examples/1_invalid_ciff_header_size.caff";
     char out_path[] = "test.gif"; 
-    int file_size = 4002260;
+    unsigned int file_size = 4002260;
 
     int stat = parse(input_path, file_size, out_path, &struct_out);
     ASSERT_NE(stat, PARSER_STATUS_OK);
@@ -161,7 +161,7 @@ TEST(parser_test,invalid_frame_sizes){
     struct_out_t struct_out;
     char input_path[] = "../../caff_examples/1_invalid_frame_sizes.caff";
     char out_path[] = "test.gif"; 
-    int file_size = 4002260;
+    unsigned int file_size = 4002260;
 
     int stat = parse(input_path, file_size, out_path, &struct_out);
     ASSERT_NE(stat, PARSER_STATUS_OK);
@@ -173,7 +173,7 @@ TEST(parser_test,invalid_new_line_in_tags){
     struct_out_t struct_out;
     char input_path[] = "../../caff_examples/1_invalid_new_line_in_tags.caff";
     char out_path[] = "test.gif"; 
-    int file_size = 4002260;
+    unsigned int file_size = 4002260;
 
     int stat = parse(input_path, file_size, out_path, &struct_out);
     ASSERT_NE(stat, PARSER_STATUS_OK);

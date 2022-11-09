@@ -3,7 +3,7 @@
 
 /* Global functions */
 
-frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
+frame_status_t process_header(file_status_t *f_stat, unsigned long long  * num_anims){
     unsigned char buffer[BUF_SIZE];
     reader_status_t stat;
 
@@ -21,7 +21,7 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
         return LEXER_INVALID_ID;
 
     // Get the length of the header
-    long long size_of_frame;
+    unsigned long long size_of_frame;
     stat = reader_consume(f_stat, CAFF_FRAME_LENGTH_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
@@ -57,7 +57,7 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
-    long long size_of_header;
+    unsigned long long size_of_header;
     size_of_header = arr_to_ll(buffer);
     // If the frame size and the header size don't match, the frame is invalid
     if(size_of_header != size_of_frame)
@@ -81,7 +81,7 @@ frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
     return LEXER_FRAME_OK;
 }
 
-frame_status_t process_credits(file_status_t *f_stat, unsigned char * date, unsigned char * creator_buffer, int creator_buffer_size, long long * creator_name_length){
+frame_status_t process_credits(file_status_t *f_stat, unsigned char * date, unsigned char * creator_buffer, unsigned int creator_buffer_size, unsigned long long * creator_name_length){
     unsigned char buffer[BUF_SIZE];
     unsigned char creator_buffer_local[CREATOR_BUF_SIZE];
     reader_status_t stat;
@@ -100,7 +100,7 @@ frame_status_t process_credits(file_status_t *f_stat, unsigned char * date, unsi
         return LEXER_INVALID_ID;
 
     // Get the length of the credits frame
-    long long size_of_frame;
+    unsigned long long size_of_frame;
     stat = reader_consume(f_stat, CAFF_FRAME_LENGTH_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
@@ -122,6 +122,7 @@ frame_status_t process_credits(file_status_t *f_stat, unsigned char * date, unsi
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
+    // Fixed size copy
     memcpy(date, buffer, CAFF_CREDITS_DATE_BYTES);
 
     // Load the length of the creator section
@@ -191,7 +192,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
-    long long size_of_frame = arr_to_ll(buffer);
+    unsigned long long size_of_frame = arr_to_ll(buffer);
 
     // Get the duration of the ciff animation
     stat = reader_consume(f_stat, CAFF_ANIMATION_DURATION_BYTES, buffer, BUF_SIZE);
@@ -229,7 +230,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
-    long long ciff_header_size = arr_to_ll(buffer);
+    unsigned long long ciff_header_size = arr_to_ll(buffer);
 
     // Read the content size
     stat = reader_consume(f_stat, CIFF_CONTENT_SIZE_BYTES, buffer, BUF_SIZE);
@@ -241,7 +242,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
-    long long ciff_content_size = arr_to_ll(buffer);
+    unsigned long long ciff_content_size = arr_to_ll(buffer);
     //Check if the frame size is not smaller than the content size
     if(size_of_frame < ciff_content_size)
         return LEXER_INVALID_CIFF_CONTENT_SIZE;
@@ -256,7 +257,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
-    long long ciff_width = arr_to_ll(buffer);
+    unsigned long long ciff_width = arr_to_ll(buffer);
 
     // Read the height
     stat = reader_consume(f_stat, CIFF_HEIGHT_BYTES, buffer, BUF_SIZE);
@@ -268,7 +269,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
-    long long ciff_height = arr_to_ll(buffer);
+    unsigned long long ciff_height = arr_to_ll(buffer);
 
     if(ciff_content_size != ciff_height * ciff_width * 3)
         return LEXER_INVALID_CIFF_CONTENT_SIZE;
@@ -279,7 +280,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
 
     // Read the caption
     unsigned char caption_buffer[CAPTIONS_BUFFER_SIZE]; 
-    int caption_length;
+    unsigned int caption_length;
     stat = reader_until_char(f_stat, CIFF_CAPTION_END, caption_buffer, CAPTIONS_BUFFER_SIZE, & caption_length);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
@@ -300,7 +301,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
 
     // Read the tags
     unsigned char tags_buffer[CAPTIONS_BUFFER_SIZE]; 
-    int tags_length = ciff_header_size - (CIFF_MAGIC_BYTES + CIFF_HEADER_SIZE_BYTES + CIFF_CONTENT_SIZE_BYTES + CIFF_WIDTH_BYTES + CIFF_HEIGHT_BYTES + caption_length);
+    unsigned int tags_length = ciff_header_size - (CIFF_MAGIC_BYTES + CIFF_HEADER_SIZE_BYTES + CIFF_CONTENT_SIZE_BYTES + CIFF_WIDTH_BYTES + CIFF_HEIGHT_BYTES + caption_length);
     stat = reader_consume(f_stat, tags_length, tags_buffer, TAGS_BUFFER_SIZE);
     if(stat != READER_STATUS_SUCCESS){
         if(stat == READER_FP_NULL)
@@ -311,7 +312,7 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
             return LEXER_EOF_REACHED;
     }
 
-    int tag_count = 0;
+    unsigned int tag_count = 0;
     int i;
     for(i = 0; i<tags_length; i++){
         if(tags_buffer[i] == '\0'){
@@ -345,10 +346,10 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
     return LEXER_FRAME_OK;
 }
 
-int add_alpha_to_rgb(ciff_frame_t ciff_in, long long n_pixels){
+int add_alpha_to_rgb(ciff_frame_t ciff_in, unsigned long long n_pixels){
     if(ciff_in.content_buffer_ptr == NULL)
         return 1;
-    long long j;
+    unsigned long long j;
     for(j = 0; j<n_pixels; j++){
         ciff_in.gif_content_buffer_ptr[4*j] = ciff_in.content_buffer_ptr[3*j];
         ciff_in.gif_content_buffer_ptr[4*j+1] = ciff_in.content_buffer_ptr[3*j+1];
@@ -359,7 +360,7 @@ int add_alpha_to_rgb(ciff_frame_t ciff_in, long long n_pixels){
 }
 
 long long arr_to_ll(const unsigned char * buffer){
-    long long retval = 0;
+    unsigned long long retval = 0;
     // Enforce little-endiannes
     int i;
     for(i = 0; i<8; i++){

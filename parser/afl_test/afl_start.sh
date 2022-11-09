@@ -9,4 +9,4 @@
 echo core | sudo tee -a /proc/sys/kernel/core_pattern
 
 # fuzz with input
-#../AFL/afl-fuzz -i testcase_dir -o findings_dir my_fuzz @@
+../AFL/afl-fuzz -i testcase_dir -o findings_dir ./my_fuzz @@

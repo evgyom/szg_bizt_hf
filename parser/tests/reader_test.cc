@@ -389,7 +389,7 @@ TEST(reader_test, read_until_buffer_np){
   file_status_t file_stat = {fp, FILE_LENGTH, 0};
 
   // Inputs - buffer is null pointer
-  int read_size = 0;
+  unsigned int read_size = 0;
   unsigned char * buffer = NULL;
   unsigned char c = 'l';
 
@@ -413,7 +413,7 @@ TEST(reader_test, read_until_fp_np){
   file_status_t file_stat = {fp, FILE_LENGTH, 0};
 
   // Inputs - buffer is null pointer
-  int read_size = 0;
+  unsigned int read_size = 0;
   unsigned char buffer[BUFFER_SIZE];
   unsigned char c = 'l';
 
@@ -435,7 +435,7 @@ TEST(reader_test, read_until_eof){
   file_status_t file_stat = {fp, FILE_LENGTH, 0};
 
   // Inputs - the character is not found in the input file and the buffer_size is bigger than the file length
-  int read_size = 0;
+  unsigned int read_size = 0;
   unsigned char buffer[BUFFER_SIZE];
   unsigned char c = 'l';
 
@@ -459,7 +459,7 @@ TEST(reader_test, read_until_basic_ok){
   file_status_t file_stat = {fp, FILE_LENGTH, 0};
 
   // Inputs
-  int read_size = 0;
+  unsigned int read_size = 0;
   unsigned char buffer[BUFFER_SIZE];
   unsigned char c = 'l';
 
@@ -483,7 +483,7 @@ TEST(reader_test, read_until_content_ok){
   file_status_t file_stat = {fp, FILE_LENGTH, 0};
 
   // Inputs
-  int read_size = 0;
+  unsigned int read_size = 0;
   unsigned char buffer[BUFFER_SIZE];
   unsigned char c = 'l';
 

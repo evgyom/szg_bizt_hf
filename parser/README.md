@@ -1,8 +1,5 @@
 # CAFF parser
 
-NOTE: VSCode + cmake build
-https://github.com/CodeIntelligenceTesting/cifuzz/tree/main/examples
-
 ## A parser használata
 
 A példák:
@@ -40,26 +37,30 @@ A példák:
 | CAFF_UNDEFINED_SECTION   | 5 | A CAFF feldolgozása végén nem értük el a file végét. Van plusz tartalom a file-ban. Ez lehet például azért, mert a header-ben a num_anim kisebb mint a CIFF-ek száma valójában. |
 | PARSER_GENERAL_ERROR     | 6 | Minden egyéb. |
 
-
-
 ## CAFF feldolgozás
 
 Limitált méretek
 * Creator name, CIFF captions, CIFF tags:  max 512 Byte
 * Maximális CIFF méret: 2100000 pixel (1920x1080=2,073,600)
 
-
-The parser uses the following library to encode the data in the GIF format.
+A parser GIF-ek létrehozásához az alábbi c++ könyvtárat használja:
 https://github.com/charlietangora/gif-h/blob/master/gif.h
 
-About color similiarity:
-https://www.baeldung.com/cs/compute-similarity-of-colours
+## Fordítás
+A fordítást cmake-kel végezhető, mi a vscode
 
-# Tests
+## Tesztek
 
-## Unit tesztek
-* reader ...
-    * 
+### Unit tesztek
+
+Az alább vázlatosan leírt unit tesztek mind sikeresen futottak. A /tests mappában található a részletes definíció.
+
+* reader függvényekre
+    * contents ok
+    * eof reached
+    * null file pointer
+    * null pointer buffers
+    * buffer size check
 * process_header function
     * contents
     * null file pointer
@@ -88,25 +89,13 @@ https://www.baeldung.com/cs/compute-similarity-of-colours
         * new_line in tags
     * only header
 
-## Static code analysis
+## Statikus code analízis
+
+A kiválasztott cppcheck nevű eszköz segítségével néhány tipikus hibát észre tudtunk venni a c kódban (file pointer felszabadításának hiánya pl.). A megtalált hibák könnyen javíthatók voltak. A legutolsó report nem tartalmaz értékelhető hibát.
 
 ## Input fuzzing
 
-## Todos
-* átlátszóság
-* kivonni bytokat creator névből
-* tests:
-    *
-* https://github.com/charlietangora/gif-h/blob/master/gif-h-demo.cpp
-* formátum szigorúan vétele?
-    * little endian !?
-* jó így hívni python-ból?
-    * Milyen infók kellenek? Creator name, date, caption, tags?
-    * Milyen error code-ot lenne jó vissza adni?
-        * CAFF_FORMAT_ERROR ?
-* ugly gif + add png?
-* milyen doksi minek?
-* static analyzer
-* afl
+Az AFL fuzzer
+
 * Add protection flags to cmakefile
     * https://stackoverflow.com/questions/54247344/cmake-different-compiler-flags-during-configuration

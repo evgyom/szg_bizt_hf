@@ -3,11 +3,11 @@
 int main(){
 
     struct_out_t struct_out;
-    char input_path[] = "../../caff_examples/1.caff";
+    char input_path[] = "../../afl_test/past_crashes/id:000005,sig:11,src:000068,op:flip1,pos:85";
     char out_path[] = "test.gif"; 
-    int file_size = 4002260;
+    int file_size = 1000000;
 
-    int stat = parse(input_path, file_size, out_path, &struct_out);
+    parser_status_t stat = parse(input_path, file_size, out_path, &struct_out);
     printf("Status: %d\n", stat);
     printf("Number of frames: %d\n", struct_out.n_frames);
     printf("Created: %d.%d.%d - %d:%d\n", 

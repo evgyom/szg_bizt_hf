@@ -87,7 +87,7 @@ TEST(lexer_test, process_header_content_1){
   }
   file_status_t file_stat = {fp, CAFF_1_HEADER_1_LENGTH, 0};
 
-  long long num_anims;
+  unsigned long long num_anims;
   frame_status_t stat;
   stat = process_header(&file_stat, &num_anims);    
 
@@ -115,7 +115,7 @@ TEST(lexer_test, process_header_content_2){
   }
   file_status_t file_stat = {fp, CAFF_1_HEADER_2_LENGTH, 0};  
 
-  long long num_anims;
+  unsigned long long num_anims;
   frame_status_t stat;
   stat = process_header(&file_stat, &num_anims);    
 
@@ -143,7 +143,7 @@ TEST(lexer_test, process_header_content_3){
   }
   file_status_t file_stat = {fp, CAFF_2_HEADER_LENGTH, 0};
 
-  long long num_anims;
+  unsigned long long num_anims;
   frame_status_t stat;
   stat = process_header(&file_stat, &num_anims);    
 
@@ -171,7 +171,7 @@ TEST(lexer_test, process_header_content_4){
   }
   file_status_t file_stat = {fp, CAFF_3_LENGTH, 0};
 
-  long long num_anims;
+  unsigned long long num_anims;
   frame_status_t stat;
   stat = process_header(&file_stat, &num_anims);    
 
@@ -193,7 +193,7 @@ TEST(lexer_test, process_header_check_fp){
   FILE * fp = NULL;
   file_status_t file_stat = {fp, CAFF_1_LENGTH, 0};
 
-  long long num_anims;
+  unsigned long long num_anims;
   frame_status_t stat;
   stat = process_header(&file_stat, &num_anims);    
   
@@ -214,7 +214,7 @@ TEST(lexer_test, process_header_check_eof){
   }
   file_status_t file_stat = {fp, CAFF_1_HEADER_EOF_LENGTH, 0};
 
-  long long num_anims;
+  unsigned long long num_anims;
   frame_status_t stat;
   stat = process_header(&file_stat, &num_anims);    
   
@@ -238,7 +238,7 @@ TEST(lexer_test, process_header_check_id){
   }
   file_status_t file_stat = {fp, CAFF_1_HEADER_INVALID_ID_LENGTH, 0};
 
-  long long num_anims;
+  unsigned long long num_anims;
   frame_status_t stat;
   stat = process_header(&file_stat, &num_anims);    
   
@@ -262,7 +262,7 @@ TEST(lexer_test, process_header_check_magic){
   }
   file_status_t file_stat = {fp, CAFF_1_HEADER_INVALID_MAGIC_LENGTH, 0};
 
-  long long num_anims;
+  unsigned long long num_anims;
   frame_status_t stat;
   stat = process_header(&file_stat, &num_anims);    
   
@@ -286,7 +286,7 @@ TEST(lexer_test, process_header_check_sizes){
   }
   file_status_t file_stat = {fp, CAFF_1_HEADER_INVALID_SIZES_LENGTH, 0};
 
-  long long num_anims;
+  unsigned long long num_anims;
   frame_status_t stat;
   stat = process_header(&file_stat, &num_anims);    
   
@@ -316,7 +316,7 @@ TEST(lexer_test, process_credits_content_1){
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
-  long long creator_name_len;
+  unsigned long long creator_name_len;
 
   frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
   
@@ -362,7 +362,7 @@ TEST(lexer_test, process_credits_content_2){
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
-  long long creator_name_len;
+  unsigned long long creator_name_len;
 
   frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
 
@@ -409,7 +409,7 @@ TEST(lexer_test, process_credits_content_3){
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
-  long long creator_name_len;
+  unsigned long long creator_name_len;
 
   frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
   
@@ -446,7 +446,7 @@ TEST(lexer_test, process_credits_check_fp){
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
-  long long creator_name_len;
+  unsigned long long creator_name_len;
 
   frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);   
   
@@ -470,7 +470,7 @@ TEST(lexer_test, process_credits_check_eof){
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
-  long long creator_name_len;
+  unsigned long long creator_name_len;
 
   frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
   
@@ -498,7 +498,7 @@ TEST(lexer_test, process_credits_invalid_id){
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
-  long long creator_name_len;
+  unsigned long long creator_name_len;
 
   frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
   
@@ -526,7 +526,7 @@ TEST(lexer_test, process_credits_non_ascii_creator){
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[100];
-  long long creator_name_len;
+  unsigned long long creator_name_len;
 
   frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 100, &creator_name_len);
 
@@ -561,7 +561,7 @@ TEST(lexer_test, process_credits_creator_buffer_size){
   // Inputs
   unsigned char date_buffer[CAFF_CREDITS_DATE_BYTES];
   unsigned char creator_buffer[8];
-  long long creator_name_len;
+  unsigned long long creator_name_len;
 
   frame_status_t stat = process_credits(&file_stat, date_buffer, creator_buffer, 8, &creator_name_len);
   

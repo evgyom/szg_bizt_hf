@@ -6,12 +6,7 @@
 #define GIF_BIT_DEPTH 8
 #define FILE_SIZE_TOLERANCE 5
 
-extern "C"{
-    #include "lexer.h"
-}
-
-
-int parse(char * ciff_path, long long file_size, char * gif_path, struct_out_t * struct_out){
+parser_status_t parse(char * ciff_path, unsigned long long file_size, char * gif_path, struct_out_t * struct_out){
 
     // Open CAFF
     FILE * fp = fopen(ciff_path, "rb");
@@ -21,7 +16,7 @@ int parse(char * ciff_path, long long file_size, char * gif_path, struct_out_t *
     file_status_t file_stat = {fp, file_size, 0};
 
     // Read header
-    long long num_anims;
+    unsigned long long num_anims;
     frame_status_t stat = process_header(&file_stat, &num_anims);
     if(stat != LEXER_FRAME_OK){
         fclose(fp);
@@ -44,7 +39,7 @@ int parse(char * ciff_path, long long file_size, char * gif_path, struct_out_t *
     // Read credits
     unsigned char date_buffer[BUF_SIZE];
     unsigned char creator_buffer[CREATOR_BUF_SIZE];
-    long long creator_name_len;
+    unsigned long long creator_name_len;
     stat = process_credits(&file_stat, date_buffer, creator_buffer, CREATOR_BUF_SIZE, &creator_name_len);
     if(stat != LEXER_FRAME_OK){
         fclose(fp);

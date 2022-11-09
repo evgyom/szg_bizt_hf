@@ -3,7 +3,7 @@
 #define UNSIGNED_EOF 255
 
 /* Function: reader_peek */
-reader_status_t reader_peek(file_status_t *f_stat, int n, unsigned char * buffer, int buffer_size){
+reader_status_t reader_peek(file_status_t *f_stat, unsigned int n, unsigned char * buffer, unsigned int buffer_size){
     // Validate input parameters
     if(buffer == NULL)
         return READER_BUFFER_NULL;
@@ -12,7 +12,7 @@ reader_status_t reader_peek(file_status_t *f_stat, int n, unsigned char * buffer
     if(n > buffer_size)
         return READER_BUFFER_SIZE;   
 
-    long long loc_copy = f_stat->loc; 
+    unsigned long long loc_copy = f_stat->loc; 
 
     // Read values to the buffer
     int i;
@@ -33,7 +33,7 @@ reader_status_t reader_peek(file_status_t *f_stat, int n, unsigned char * buffer
 }
 
 /* Function: reader_consume */
-reader_status_t reader_consume(file_status_t *f_stat, int n, unsigned char * buffer, int buffer_size){
+reader_status_t reader_consume(file_status_t *f_stat, unsigned int n, unsigned char * buffer, unsigned int buffer_size){
     // Validate input parameters
     if(buffer == NULL)
         return READER_BUFFER_NULL;
@@ -58,7 +58,7 @@ reader_status_t reader_consume(file_status_t *f_stat, int n, unsigned char * buf
 }
 
 /* Function: reader_until_char */
-reader_status_t reader_until_char(file_status_t *f_stat, unsigned char char_until, unsigned char * buffer, int buffer_size, int * read_size){
+reader_status_t reader_until_char(file_status_t *f_stat, unsigned char char_until, unsigned char * buffer, unsigned int buffer_size, unsigned int * read_size){
     // Validate input parameters
     if(buffer == NULL)
         return READER_BUFFER_NULL;

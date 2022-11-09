@@ -4,6 +4,7 @@
 #include "parser.h"
 
 #define GIF_BIT_DEPTH 8
+#define FILE_SIZE_TOLERANCE 5
 
 int parse(char * ciff_path, long long file_size, char * gif_path, struct_out_t * struct_out){
 
@@ -132,12 +133,13 @@ int parse(char * ciff_path, long long file_size, char * gif_path, struct_out_t *
     struct_out->captions_length = my_ciff.captions_length;
     struct_out-> tags_length = my_ciff.tags_length;
     struct_out->n_tags = my_ciff.number_of_tags;
-    memcpy(struct_out->captions, my_ciff.captions_buffer, my_ciff.captions_length);
+    memcpy(struct_out->captions, my_ciff.captions_buffer, my_ciff.captions_length); 
     memcpy(struct_out->tags, my_ciff.tags_buffer, my_ciff.tags_length);
 
     //Create empty GIF
     GifWriter writer = {};
-    GifBegin(&writer, gif_path, my_ciff.width, my_ciff.height, my_ciff.duration, GIF_BIT_DEPTH, true);
+    // In the CAFF the duration is in ms, for the lib the delay has to be enetered in 1/100 seconds. 
+    GifBegin(&writer, gif_path, my_ciff.width, my_ciff.height, my_ciff.duration/10, GIF_BIT_DEPTH, true);
     
     // Add alpha channel to the pixels, for the library
     if(add_alpha_to_rgb(my_ciff, my_ciff.width * my_ciff.height)){
@@ -197,7 +199,7 @@ int parse(char * ciff_path, long long file_size, char * gif_path, struct_out_t *
         }            
         // Add the new frame to the GIF
         GifWriteFrame(&writer, my_ciff.gif_content_buffer_ptr, my_ciff.width, my_ciff.height, my_ciff.duration/10, GIF_BIT_DEPTH, true);
-    } 
+    }
 
     // Write EOF
     GifEnd(&writer);
@@ -206,7 +208,11 @@ int parse(char * ciff_path, long long file_size, char * gif_path, struct_out_t *
     free(my_ciff.content_buffer_ptr);
     free(my_ciff.gif_content_buffer_ptr);
 
+    // Check if the end of the file is reached
+    if(file_stat.loc < (file_stat.file_size - FILE_SIZE_TOLERANCE))
+        return CAFF_UNDEFINED_SECTION;
+
     // Close the file 
     fclose(fp);
-    return 0;
+    return PARSER_STATUS_OK;
 }

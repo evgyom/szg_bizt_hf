@@ -27,7 +27,6 @@ class struct_out(Structure):
                 ("frame_height", c_int32),
                 ("frame_width", c_int32)]
 
-
 if __name__ == "__main__":
     project_root = Path.cwd()
     caff_file_path = project_root.joinpath("caff_examples").joinpath("1.caff")
@@ -55,10 +54,6 @@ if __name__ == "__main__":
     print("Captions:", test_struct.captions[0:test_struct.captions_length].decode("UTF-8"))
     print("Number of tags:", test_struct.n_tags)
     print("Tags length:", test_struct.tags_length)
-
-   #for i in range(test_struct.tags_length):
-   #    print(test_struct.tags[i])
-   #all_tags = test_struct.tags
-   #print("Tags:", all_tags)
+    print("Tags:\n", test_struct.tags[0:test_struct.tags_length].decode("UTF-8"))
     print("Frame size: {} x {}".format(test_struct.frame_width, test_struct.frame_height))
     print("Total duration (ms):", test_struct.total_duration)

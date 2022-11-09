@@ -357,7 +357,7 @@ void GifMakePalette( const uint8_t* lastFrame, const uint8_t* nextFrame, uint32_
     // SplitPalette is destructive (it sorts the pixels by color) so
     // we must create a copy of the image for it to destroy
     size_t imageSize = (size_t)(width * height * 4 * sizeof(uint8_t));
-    uint8_t* destroyableImage = (uint8_t*)GIF_TEMP_MALLOC(imageSize);
+    uint8_t* destroyableImage = static_cast<uint8_t*>(GIF_TEMP_MALLOC(imageSize));
     memcpy(destroyableImage, nextFrame, imageSize);
 
     int numPixels = (int)(width * height);
@@ -387,7 +387,7 @@ void GifDitherImage( const uint8_t* lastFrame, const uint8_t* nextFrame, uint8_t
     // quantPixels initially holds color*256 for all pixels
     // The extra 8 bits of precision allow for sub-single-color error values
     // to be propagated
-    int32_t *quantPixels = (int32_t *)GIF_TEMP_MALLOC(sizeof(int32_t) * (size_t)numPixels * 4);
+    int32_t *quantPixels = static_cast<int32_t *>(GIF_TEMP_MALLOC(sizeof(int32_t) * (size_t)numPixels * 4));
 
     for( int ii=0; ii<numPixels*4; ++ii )
     {
@@ -642,7 +642,7 @@ void GifWriteLzwImage(FILE* f, uint8_t* image, uint32_t left, uint32_t top,  uin
 
     fputc(minCodeSize, f); // min code size 8 bits
 
-    GifLzwNode* codetree = (GifLzwNode*)GIF_TEMP_MALLOC(sizeof(GifLzwNode)*4096);
+    GifLzwNode* codetree = static_cast<GifLzwNode*>(GIF_TEMP_MALLOC(sizeof(GifLzwNode)*4096));
 
     memset(codetree, 0, sizeof(GifLzwNode)*4096);
     int32_t curCode = -1;
@@ -749,7 +749,7 @@ bool GifBegin( GifWriter* writer, const char* filename, uint32_t width, uint32_t
     writer->firstFrame = true;
 
     // allocate
-    writer->oldImage = (uint8_t*)GIF_MALLOC(width*height*4);
+    writer->oldImage = static_cast<uint8_t*>(GIF_MALLOC(width*height*4));
 
     fputs("GIF89a", writer->f);
 

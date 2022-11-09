@@ -1,13 +1,16 @@
 # CAFF parser
 
+https://github.com/CodeIntelligenceTesting/cifuzz/tree/main/examples
+
 ## A parser használata
 
-Bemenetek:
+### Bemenetek:
 * path1: a bemeneti CAFF fájl elérséi útvonala
 * path2: a generálandó gif fájlneve és elérési útvonala
 * file_length: szükséges beadni a fájl hosszát, mivel a bináris fájl tartalmazhat EOF-nek minősülő 0xFF karaktereket az RGB byte-okban. A fájl méretét byte-ra pontosan megállapíthatjuk pythonban
 
-Kimenetek:
+### Kimenetek:
+(nem mind implementált)
 * creator_name (pointerként átadva)
 * creator_name_length
 * date(year, month, day, hour, minute)
@@ -20,9 +23,27 @@ Kimenetek:
 * frame_height
 * number_of_frames
 
-## Reader level
+### Kimeneti státuszok
 
-## Lexer level
+| Név | Kód | Leírás  |
+|---|---|---|
+| PARSER_FP_NULL,          | 0 | Nem sikerül megnyitni a file-t. |
+| PARSER_BUFFER_SIZE_ERROR | 1 | A beolvasás során a buffer méretét meghaladja a beírandó byte-ok száma. |
+| PARSER_EOF_REACHED       | 2 | A parser váratlanul elért a file végére, annak ellenére. Ez az hibakód nem túl valószínű, mivel a parser bemenetként kapja a fájl hosszát, és ellenőrzi, hogy a megadott számú CIFF (adott mérettel) elfér-e a fájlban. |
+| CAFF_FORMAT_ERROR        | 3 | Különböző hibák, amik sértik a CAFF formátum specifikációt. Ide tartozik az összes inkonzisztencia, különböző egymásból számolható paraméter között. |
+| CAFF_FIELD_SIZE_ERROR    | 4 | Egy mező mérete meghaladta a parser által meximálisan kezeltet. |
+| PARSER_GENERAL_ERROR     | 5 | Minden egyéb. |
+
+
+
+
+
+
+## CAFF feldolgozás
+
+Limitált méretek
+* Creator name, CIFF captions, CIFF tags:  max 512 Byte
+* Maximális CIFF méret: 2100000 pixel (1920x1080=2,073,600)
 
 ## Parser level
 

@@ -1,10 +1,6 @@
 #include "lexer.h"
 #include <string.h>
 
-
-/* Private functions */
-frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff);
-
 /* Global functions */
 
 frame_status_t process_header(file_status_t *f_stat, long long  * num_anims){
@@ -209,14 +205,6 @@ frame_status_t process_ciff_frame(file_status_t *f_stat, ciff_frame_t * ciff){
     }
     ciff->duration = arr_to_ll(buffer);
 
-    frame_status_t ciff_stat = process_ciff(f_stat, ciff);
-
-}
-
-frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
-    unsigned char buffer[BUF_SIZE];
-    reader_status_t stat;
-
     // Read the CIFF magic field
     stat = reader_consume(f_stat, CIFF_MAGIC_BYTES, buffer, BUF_SIZE);
     if(stat != READER_STATUS_SUCCESS){
@@ -254,6 +242,9 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
             return LEXER_EOF_REACHED;
     }
     long long ciff_content_size = arr_to_ll(buffer);
+    //Check if the frame size is not smaller than the content size
+    if(size_of_frame < ciff_content_size)
+        return LEXER_INVALID_CIFF_CONTENT_SIZE;
 
     // Read the width
     stat = reader_consume(f_stat, CIFF_WIDTH_BYTES, buffer, BUF_SIZE);
@@ -344,7 +335,7 @@ frame_status_t process_ciff(file_status_t *f_stat, ciff_frame_t * ciff){
         if(stat == READER_FP_NULL)
             return LEXER_FP_ERROR;
         if(stat == READER_BUFFER_SIZE)
-            return LEXER_BUFFER_SIZE_ERROR;
+            return LEXER_CIFF_CONTENT_SIZE_ERROR;
         if(stat == READER_EOF_REACHED)
             return LEXER_EOF_REACHED;
     }
@@ -365,7 +356,7 @@ int add_alpha_to_rgb(ciff_frame_t ciff_in, long long n_pixels){
     return 0;
 }
 
-long long arr_to_ll(unsigned char * buffer){
+long long arr_to_ll(const unsigned char * buffer){
     long long retval = 0;
     // Enforce little-endiannes
     int i;

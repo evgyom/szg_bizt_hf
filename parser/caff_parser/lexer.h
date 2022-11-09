@@ -58,7 +58,8 @@ typedef enum{
     LEXER_CIFF_CAPTIONS_TOO_LONG,
     LEXER_CIFF_TAGS_TOO_LONG,
     LEXER_CIFF_CAPTION_NOT_TERMINATED,
-    LEXER_CIFF_INVALID_NEW_LINE
+    LEXER_CIFF_INVALID_NEW_LINE,
+    LEXER_CIFF_CONTENT_SIZE_ERROR
 }frame_status_t;
 
 /* Struct to hold information about the ciff frame */
@@ -124,6 +125,6 @@ int add_alpha_to_rgb(ciff_frame_t ciff_in, long long n_pixels);
 /* Function: arr_to_ll 
  * This function converts a 8 byte buffer to a long long variable. 
  */
-long long arr_to_ll(unsigned char * buffer);
+long long arr_to_ll(const unsigned char * buffer);
 
 #endif

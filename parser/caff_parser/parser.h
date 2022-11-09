@@ -30,4 +30,13 @@ extern "C"{
     int parse(char * ciff_path, long long file_size, char * gif_path,  struct_out_t * struct_out);
 }
 
+typedef enum{
+    PARSER_FP_NULL,
+    PARSER_BUFFER_SIZE_ERROR,
+    PARSER_EOF_REACHED,
+    CAFF_FORMAT_ERROR,
+    CAFF_FIELD_SIZE_ERROR,
+    PARSER_GENERAL_ERROR
+}parser_status_t;
+
 #endif

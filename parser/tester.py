@@ -52,5 +52,13 @@ if __name__ == "__main__":
     print("N_frames:", test_struct.n_frames)
     print("Creator name length:", test_struct.creator_name_length)
     print("Creator name:", test_struct.creator_name[0:test_struct.creator_name_length].decode("UTF-8"))
+    print("Captions:", test_struct.captions[0:test_struct.captions_length].decode("UTF-8"))
+    print("Number of tags:", test_struct.n_tags)
+    print("Tags length:", test_struct.tags_length)
+
+   #for i in range(test_struct.tags_length):
+   #    print(test_struct.tags[i])
+   #all_tags = test_struct.tags
+   #print("Tags:", all_tags)
     print("Frame size: {} x {}".format(test_struct.frame_width, test_struct.frame_height))
     print("Total duration (ms):", test_struct.total_duration)

@@ -1,5 +1,6 @@
 # CAFF parser
 
+NOTE: VSCode + cmake build
 https://github.com/CodeIntelligenceTesting/cifuzz/tree/main/examples
 
 ## A parser használata
@@ -57,7 +58,8 @@ https://www.baeldung.com/cs/compute-similarity-of-colours
 # Tests
 
 ## Unit tesztek
-
+* reader ...
+    * 
 * process_header function
     * contents
     * null file pointer

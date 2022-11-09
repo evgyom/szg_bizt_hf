@@ -40,7 +40,7 @@ if __name__ == "__main__":
     caff_parser.parse.argtypes = [c_char_p, c_long, c_char_p, POINTER(struct_out)]
 
     # Call the function
-    test_struct = struct_out(8,2)
+    test_struct = struct_out()
     in_path = str(caff_file_path).encode("utf-8")
     out_path = str(gif_out_path).encode("utf-8")
     file_size = os.path.getsize(caff_file_path)

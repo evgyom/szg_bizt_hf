@@ -6,40 +6,56 @@ from datetime import datetime
 from flask import render_template, url_for, flash, redirect, request, abort
 from caffstore import app, db, bcrypt
 from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm
-from caffstore.models import CAFF, Comment, User
-# from flask_login import login_user, current_user, logout_user, login_required
+from caffstore.models import CAFF, Comment, User, Role, UserRoles
+from flask_login import login_user, current_user, logout_user, login_required
+
+
+def check_role(role_name):
+    roles = current_user.roles
+    role_names = map(lambda r: r.name, roles)
+    return role_name in role_names
 
 
 @app.route("/")
 @app.route("/home")
+@login_required
 def home():
+    print(check_role("User"))
     caffs = CAFF.query.all()
     return render_template('home.html', items=caffs, title='About')
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    #if current_user.is_authenticated:
-    #    return redirect(url_for('home'))
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
+
+        role = Role.query.filter_by(name='User').first_or_404()
+        user_role = UserRoles(user_id=user.id, role_id=role.id)
+        db.session.add(user_role)
+        db.session.commit()
+
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('home'))
+
     return render_template('register.html', title='Register', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    #if current_user.is_authenticated:
-    #    return redirect(url_for('home'))
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            #login_user(user, remember=form.remember.data)
+            login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
@@ -64,6 +80,7 @@ def save_CAFF(CAFF_data):
 
 
 @app.route("/upload", methods=['GET', 'POST'])
+#@roles_required('Admin')
 def upload():
     form = UploadCAFFForm()
     if form.validate_on_submit():
@@ -83,6 +100,12 @@ def caff_details(caff_id):
     print(item)
 
     return render_template('details.html', title='CAFF details', item=item)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
 

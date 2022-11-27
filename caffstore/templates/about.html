@@ -1,14 +1,4 @@
 {% extends "layout.html" %}
 {% block content %}
-        {% for item in items %}
-            <article class="media content-section">
-              <img src="{{ url_for('static', filename='CAFF_files/' + item.preview_file )}}">
-              <div>
-                  <h2><a class="mr2" href="{{ url_for('caff_details', caff_id=item.id) }}">{{ item.title }}</a></h2>
-                  <p>{{ item.creator_name }}</p>
-                  <p>{{ item.creation_date.strftime('%Y-%m-%d') }}</p>
-                  <p>{{ item.duration }}</p>
-              </div>
-            </article>
-        {% endfor %}
+    <h1>About Page</h1>
 {% endblock content %}

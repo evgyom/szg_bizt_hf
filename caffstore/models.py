@@ -1,6 +1,19 @@
 from datetime import datetime
 from caffstore import db
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password: object = db.Column(db.String(60), nullable=False)
+
+    CAFFs = db.relationship('CAFF', backref='uploader', lazy=True)
+    Comments = db.relationship('Comment', backref='author', lazy=True)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}')"
+
+
 class CAFF(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False, default="untitled")
@@ -14,7 +27,7 @@ class CAFF(db.Model):
 
     preview_file = db.Column(db.String(32), nullable=False, default='no_preview.jpg')
     CAFF_file = db.Column(db.String(32), nullable=False, default='asd.CAFF')
-    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return f"CAFF('{self.id}', {self.creator_name} ,'{self.duration}')"
@@ -25,7 +38,7 @@ class Comment(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
 
-    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     CAFF_id = db.Column(db.Integer, db.ForeignKey('caff.id'), nullable=False)
 
     def __repr__(self):

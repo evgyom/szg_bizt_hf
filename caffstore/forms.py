@@ -1,13 +1,20 @@
+import decimal
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField, DecimalField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from caffstore.models import User
 
 class UploadCAFFForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
+    price = DecimalField(places=2, rounding=decimal.ROUND_UP, validators=[DataRequired()])
     picture = FileField('Upload CAFF file', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Upload')
+
+    def validate_price(self, price):
+        if price.data < decimal.Decimal(0):
+            raise ValidationError('Price must be positive')
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=24)])

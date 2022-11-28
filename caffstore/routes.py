@@ -80,18 +80,21 @@ def save_CAFF(CAFF_data):
 
 
 @app.route("/upload", methods=['GET', 'POST'])
-#@roles_required('Admin')
+@login_required
 def upload():
     form = UploadCAFFForm()
     if form.validate_on_submit():
         CAFFname = save_CAFF(form.picture.data)
         ### parse CAFF
-        caff = CAFF(title=form.title.data, creator_name="sadasdas", duration=123, preview_file=CAFFname, CAFF_file=CAFFname, user_id=1)
+        caff = CAFF(title=form.title.data, creator_name="sadasdas", duration=123, preview_file=CAFFname, CAFF_file=CAFFname, user_id=current_user.id)
         db.session.add(caff)
         db.session.commit()
+
+        print(form.price.data)
         return redirect(url_for('home'))
     else:
-        flash(form.errors)
+        pass
+        #flash(form.errors)
     return render_template('upload.html', title='Upload CAFF', form=form)
 
 @app.route("/caff_details/<int:caff_id>", methods=['GET', 'POST'])
@@ -113,6 +116,15 @@ def caff_details(caff_id):
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+@app.route("/edit_userdata/<int:user_id>", methods=['GET', 'POST'])
+def edit_userdata(user_id):
+    if user_id != current_user.id and not check_role("Admin"):
+        flash("You have to be admin to access this feature", "danger")
+        return redirect(url_for('home'))
+
+    print(user_id)
+    return redirect(url_for('about'))
 
 
 

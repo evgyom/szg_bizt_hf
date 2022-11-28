@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-   <div>
-       <img src="{{ url_for('static', filename='CAFF_files/' + item.preview_file )}}" class="img-fluid" alt="CAFF preview">
+   <div class="text-center">
+       <img src="{{ url_for('static', filename='CAFF_files/' + item.preview_file )}}" class="img-fluid rounded" alt="CAFF preview">
    </div>
    <div>
      <h2>{{ item.title }}</h2>

@@ -5,7 +5,7 @@ from datetime import datetime
 
 from flask import render_template, url_for, flash, redirect, request, abort
 from caffstore import app, db, bcrypt
-from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm
+from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, CommentForm
 from caffstore.models import CAFF, Comment, User, Role, UserRoles
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -96,10 +96,17 @@ def upload():
 
 @app.route("/caff_details/<int:caff_id>", methods=['GET', 'POST'])
 def caff_details(caff_id):
-    item = CAFF.query.get_or_404(caff_id)
-    print(item)
 
-    return render_template('details.html', title='CAFF details', item=item)
+    item = CAFF.query.get_or_404(caff_id)
+    form = CommentForm()
+
+    if form.validate_on_submit():
+        comment = Comment(content=form.content.data, CAFF_id=caff_id, user_id=current_user.id)
+        db.session.add(comment)
+        db.session.commit()
+
+
+    return render_template('details.html', title='CAFF details', item=item, form=form)
 
 
 @app.route("/logout")

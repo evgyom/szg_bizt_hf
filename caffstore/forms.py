@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, SubmitField, PasswordField, BooleanField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from caffstore.models import User
 
@@ -32,3 +32,7 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+class CommentForm(FlaskForm):
+    content = TextAreaField('Post a comment', validators=[DataRequired()])
+    submit = SubmitField('Post')

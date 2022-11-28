@@ -6,7 +6,6 @@ from caffstore import db, login_manager
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -60,8 +59,8 @@ class Comment(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    CAFF_id = db.Column(db.Integer, db.ForeignKey('caffs.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) #author
+    CAFF_id = db.Column(db.Integer, db.ForeignKey('caffs.id'), nullable=False) #caff_img
 
     def __repr__(self):
         return f"Comment('{self.id}', {self.date_posted} ,'{self.content}')"

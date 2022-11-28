@@ -1,14 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
-        {% for item in items %}
-            <article class="media content-section">
-              <img src="{{ url_for('static', filename='CAFF_files/' + item.preview_file )}}" width="500px">
-              <div>
-                  <h2><a class="mr2" href="{{ url_for('caff_details', caff_id=item.id) }}">{{ item.title }}</a></h2>
-                  <p>{{ item.creator_name }}</p>
-                  <p>{{ item.creation_date.strftime('%Y-%m-%d') }}</p>
-                  <p>{{ item.duration }}</p>
-              </div>
-            </article>
-        {% endfor %}
+<article class="media content-section">
+    <div class="card-columns" >
+            {% for item in items %}
+                <div class="card">
+                  <img src="{{ url_for('static', filename='CAFF_files/' + item.preview_file )}}" class="card-img-top"
+                    alt="CAFF preview" />
+                  <div class="card-body">
+                      <h5><a class="card-title" href="{{ url_for('caff_details', caff_id=item.id) }}">{{ item.title }}</a></h5>
+                      <p class="card-text">{{ item.creator_name }}</p>
+                      <p class="card-text">{{ item.creation_date.strftime('%Y-%m-%d') }}</p>
+                      <p class="card-text">{{ item.duration }}</p>
+                  </div>
+                </div>
+            {% endfor %}
+    </div>
+</article>
 {% endblock content %}
+
+

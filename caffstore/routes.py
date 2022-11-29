@@ -1,3 +1,5 @@
+import decimal
+
 from PIL import Image
 import os
 import secrets
@@ -116,7 +118,7 @@ def upload():
         CAFFname = save_CAFF(form.picture.data)
         GIFname = CAFFname.replace("CAFF", "PREVIEW").replace(".caff",".gif")
         caff_in_path = os.path.join(app.root_path, 'static\\CAFF_files', CAFFname)
-        gif_out_path = os.path.join(app.root_path, 'static\\CAFF_files', GIFname) # Save to separate directory?
+        gif_out_path = os.path.join(app.root_path, 'static\\Preview_files', GIFname) # Save to separate directory?
 
         # Load library
         lib_path = os.path.join(app.root_path, "libcaff_parser_shared.dll") 
@@ -146,12 +148,15 @@ def upload():
                         captions = caff_caption,
                         tags = caff_tags,
                         duration = caff_duration, 
-                        preview_file = CAFFname, 
+                        preview_file = GIFname,
                         CAFF_file = CAFFname, 
-                        user_id = current_user.id)
+                        user_id = current_user.id,
+                        price = decimal.Decimal(form.price.data))
 
             db.session.add(caff)
             db.session.commit()
+            flash("Upload Successful", "success")
+
         else:
             # CAFF has to be removed
             os.remove(caff_in_path)
@@ -162,15 +167,14 @@ def upload():
                 pass
 
             if(retval == PARSER_FP_NULL):
-                print("Parser: file pointer error.")
+                flash("Parser: file pointer error.", "danger")
             elif(retval == PARSER_BUFFER_SIZE_ERROR):
-                print("Parser: buffer size error.")
+                flash("Parser: buffer size error.", "danger")
             elif(retval == PARSER_GENERAL_ERROR):
-                print("Parser: general error.")
+                flash("Parser: general error.", "danger")
             else:
-                print("Parser: format error.")
-        
-        print(form.price.data)
+                flash("Parser: format error.", "danger")
+
         return redirect(url_for('home'))
     else:
         pass

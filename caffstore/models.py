@@ -1,3 +1,4 @@
+import decimal
 from datetime import datetime
 from flask_login import UserMixin
 from caffstore import db, login_manager
@@ -11,11 +12,11 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password: object = db.Column(db.String(60), nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+    balance = db.Column(db.DECIMAL(), default=decimal.Decimal(0))
 
     CAFFs = db.relationship('CAFF', backref='uploader', lazy=True)
     Comments = db.relationship('Comment', backref='author', lazy=True)
-
     roles = db.relationship('Role', secondary='user_roles')
 
     def __repr__(self):
@@ -42,6 +43,8 @@ class CAFF(db.Model):
     captions = db.Column(db.String(200))
     tags = db.Column(db.String(200))
     duration = db.Column(db.Integer, nullable=False)
+
+    price = db.Column(db.DECIMAL(), nullable=False)
 
     comments = db.relationship('Comment', backref='caff_img', lazy=True)
 

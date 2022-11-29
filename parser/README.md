@@ -29,13 +29,14 @@ A példák:
 
 | Név | Kód | Leírás  |
 |---|---|---|
-| PARSER_FP_NULL,          | 0 | Nem sikerül megnyitni a file-t. |
-| PARSER_BUFFER_SIZE_ERROR | 1 | A beolvasás során a buffer méretét meghaladja a beírandó byte-ok száma. |
-| PARSER_EOF_REACHED       | 2 | A parser váratlanul elért a file végére, annak ellenére. Ez az hibakód nem túl valószínű, mivel a parser bemenetként kapja a fájl hosszát, és ellenőrzi, hogy a megadott számú CIFF (adott mérettel) elfér-e a fájlban. |
-| CAFF_FORMAT_ERROR        | 3 | Különböző hibák, amik sértik a CAFF formátum specifikációt. Ide tartozik az összes inkonzisztencia, különböző egymásból számolható paraméter között. |
-| CAFF_FIELD_SIZE_ERROR    | 4 | Egy mező mérete meghaladta a parser által meximálisan kezeltet. |
-| CAFF_UNDEFINED_SECTION   | 5 | A CAFF feldolgozása végén nem értük el a file végét. Van plusz tartalom a file-ban. Ez lehet például azért, mert a header-ben a num_anim kisebb mint a CIFF-ek száma valójában. |
-| PARSER_GENERAL_ERROR     | 6 | Minden egyéb. |
+| PARSER_STATUS_OK         | 0 | OK |
+| PARSER_FP_NULL,          | 1 | Nem sikerül megnyitni a file-t. |
+| PARSER_BUFFER_SIZE_ERROR | 2 | A beolvasás során a buffer méretét meghaladja a beírandó byte-ok száma. |
+| PARSER_EOF_REACHED       | 3 | A parser váratlanul elért a file végére, annak ellenére. Ez az hibakód nem túl valószínű, mivel a parser bemenetként kapja a fájl hosszát, és ellenőrzi, hogy a megadott számú CIFF (adott mérettel) elfér-e a fájlban. |
+| CAFF_FORMAT_ERROR        | 4 | Különböző hibák, amik sértik a CAFF formátum specifikációt. Ide tartozik az összes inkonzisztencia, különböző egymásból számolható paraméter között. |
+| CAFF_FIELD_SIZE_ERROR    | 5 | Egy mező mérete meghaladta a parser által meximálisan kezeltet. |
+| CAFF_UNDEFINED_SECTION   | 6 | A CAFF feldolgozása végén nem értük el a file végét. Van plusz tartalom a file-ban. Ez lehet például azért, mert a header-ben a num_anim kisebb mint a CIFF-ek száma valójában. |
+| PARSER_GENERAL_ERROR     | 7 | Minden egyéb. |
 
 ## CAFF feldolgozás
 

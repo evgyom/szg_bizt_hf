@@ -2,6 +2,7 @@ from PIL import Image
 import os
 import secrets
 from datetime import datetime
+import ctypes
 
 from flask import render_template, url_for, flash, redirect, request, abort
 from caffstore import app, db, bcrypt
@@ -9,6 +10,34 @@ from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, Comment
 from caffstore.models import CAFF, Comment, User, Role, UserRoles
 from flask_login import login_user, current_user, logout_user, login_required
 
+# c structure for the parser
+BUF_SIZE = 512
+class struct_out(ctypes.Structure):
+    _fields_ = [("n_frames", ctypes.c_int32),  
+                ("creator_name_length", ctypes.c_int32),
+                ("creator_name", ctypes.c_char * BUF_SIZE),
+                ("creation_year", ctypes.c_int32),
+                ("creation_month", ctypes.c_int32),
+                ("creation_day", ctypes.c_int32),
+                ("creation_hour", ctypes.c_int32),
+                ("creation_minute", ctypes.c_int32),
+                ("captions", ctypes.c_char * BUF_SIZE),
+                ("captions_length", ctypes.c_int32),
+                ("tags", ctypes.c_char * BUF_SIZE),
+                ("tags_length", ctypes.c_int32),
+                ("n_tags", ctypes.c_int32),
+                ("total_duration", ctypes.c_int32),
+                ("frame_height", ctypes.c_int32),
+                ("frame_width", ctypes.c_int32)]
+
+PARSER_STATUS_OK = 0
+PARSER_FP_NULL = 1
+PARSER_BUFFER_SIZE_ERROR = 2
+PARSER_EOF_REACHED	= 3
+CAFF_FORMAT_ERROR = 4
+CAFF_FIELD_SIZE_ERROR = 5
+CAFF_UNDEFINED_SECTION = 6
+PARSER_GENERAL_ERROR = 7
 
 def check_role(role_name):
     roles = current_user.roles
@@ -85,11 +114,62 @@ def upload():
     form = UploadCAFFForm()
     if form.validate_on_submit():
         CAFFname = save_CAFF(form.picture.data)
-        ### parse CAFF
-        caff = CAFF(title=form.title.data, creator_name="sadasdas", duration=123, preview_file=CAFFname, CAFF_file=CAFFname, user_id=current_user.id)
-        db.session.add(caff)
-        db.session.commit()
+        GIFname = CAFFname.replace("CAFF", "PREVIEW").replace(".caff",".gif")
+        caff_in_path = os.path.join(app.root_path, 'static\\CAFF_files', CAFFname)
+        gif_out_path = os.path.join(app.root_path, 'static\\CAFF_files', GIFname) # Save to separate directory?
 
+        # Load library
+        lib_path = os.path.join(app.root_path, "libcaff_parser_shared.dll") 
+        caff_parser = ctypes.CDLL(str(lib_path))
+
+        # Define the input types
+        caff_parser.parse.argtypes = [ctypes.c_char_p, ctypes.c_long, ctypes.c_char_p,ctypes.POINTER(struct_out)]
+
+        # Call the function
+        output_struct = struct_out()
+        in_path = str(caff_in_path).encode("utf-8")
+        out_path = str(gif_out_path).encode("utf-8")
+        file_size = os.path.getsize(caff_in_path)
+        retval = caff_parser.parse(in_path, file_size, out_path, ctypes.byref(output_struct))
+
+        if(retval == PARSER_STATUS_OK):
+            caff_creator_name = output_struct.creator_name[0:output_struct.creator_name_length].decode("UTF-8")
+            caff_duration = output_struct.total_duration
+            caff_caption = output_struct.captions[0:output_struct.captions_length].decode("UTF-8")
+            caff_tags = output_struct.tags[0:output_struct.tags_length].decode("UTF-8") #.split("\n")
+
+            # Validate max length / max duration ???
+
+            caff = CAFF(title=form.title.data,
+                        creator_name=caff_creator_name,
+                        creation_date = datetime(output_struct.creation_year, output_struct.creation_month, output_struct.creation_day),
+                        captions = caff_caption,
+                        tags = caff_tags,
+                        duration = caff_duration, 
+                        preview_file = CAFFname, 
+                        CAFF_file = CAFFname, 
+                        user_id = current_user.id)
+
+            db.session.add(caff)
+            db.session.commit()
+        else:
+            # CAFF has to be removed
+            os.remove(caff_in_path)
+            # If the preview is created, it also has to be removed
+            try:
+                os.remove(gif_out_path)
+            except FileExistsError:
+                pass
+
+            if(retval == PARSER_FP_NULL):
+                print("Parser: file pointer error.")
+            elif(retval == PARSER_BUFFER_SIZE_ERROR):
+                print("Parser: buffer size error.")
+            elif(retval == PARSER_GENERAL_ERROR):
+                print("Parser: general error.")
+            else:
+                print("Parser: format error.")
+        
         print(form.price.data)
         return redirect(url_for('home'))
     else:

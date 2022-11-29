@@ -8,7 +8,7 @@ from caffstore.models import User
 class UploadCAFFForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     price = DecimalField(places=2, rounding=decimal.ROUND_UP, validators=[DataRequired()])
-    picture = FileField('Upload CAFF file', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Upload CAFF file', validators=[FileAllowed(['caff'])])
     submit = SubmitField('Upload')
 
     def validate_price(self, price):

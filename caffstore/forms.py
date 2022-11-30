@@ -43,3 +43,7 @@ class LoginForm(FlaskForm):
 class CommentForm(FlaskForm):
     content = TextAreaField('Post a comment', validators=[DataRequired()])
     submit = SubmitField('Post')
+
+class SearchForm(FlaskForm):
+    search_key = StringField('Search for a CAFF', validators=[DataRequired()], render_kw={"placeholder": "Enter CAFF name"})
+    submit = SubmitField('Search')

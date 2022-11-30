@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="mb-3">
+    <h1>Manage CAFFs</h1>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Username</th>
+      <th scope="col">Title</th>
+      <th scope="col">Creator name</th>
+      <th scope="col">Creation date</th>
+      <th scope="col">Price</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for caff in caffs %}
+    <tr>
+        <th scope="row">{{caff.id}}</th>
+        <td>{{caff.uploader.username}}</td>
+        <td>{{caff.title}}</td>
+        <td>{{caff.creator_name}}</td>
+        <td>{{caff.creation_date.strftime('%Y-%m-%d')}}</td>
+        <td>{{caff.price}}</td>
+        <td>*********</td>
+
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock content %}

@@ -8,7 +8,7 @@ import ctypes
 
 from flask import render_template, url_for, flash, redirect, request, abort
 from caffstore import app, db, bcrypt
-from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, CommentForm
+from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, CommentForm, SearchForm
 from caffstore.models import CAFF, Comment, User, Role, UserRoles
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -47,13 +47,21 @@ def check_role(role_name):
     return role_name in role_names
 
 
-@app.route("/")
-@app.route("/home")
+@app.route("/", methods=['GET', 'POST'])
+@app.route("/home", methods=['GET', 'POST'])
 @login_required
 def home():
-    print(check_role("User"))
-    caffs = CAFF.query.all()
-    return render_template('home.html', items=caffs, title='About')
+    form = SearchForm(request.args)
+    if form.validate():
+        #print(form.search_key.data)
+        caffs = CAFF.query.filter_by(title=form.search_key.data)
+        if caffs.count() == 0:
+            flash("No caffs found with the given name", "danger")
+    else:
+        caffs = CAFF.query.all()
+    #print(check_role("User"))
+
+    return render_template('home.html', items=caffs, title='About', form=form)
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -192,7 +200,6 @@ def caff_details(caff_id):
         db.session.add(comment)
         db.session.commit()
 
-
     return render_template('details.html', title='CAFF details', item=item, form=form)
 
 
@@ -207,8 +214,31 @@ def edit_userdata(user_id):
         flash("You have to be admin to access this feature", "danger")
         return redirect(url_for('home'))
 
+    userdata = User.query.get_or_404(user_id)
+    form = RegistrationForm()
+    form.username.data = userdata.username
+    form.email.data = userdata.email
+
+    return render_template('register.html', title='Edit Userdata', form=form)
+
     print(user_id)
     return redirect(url_for('about'))
+
+@app.route("/manage_users")
+def manage_users():
+    users = User.query.all()
+    return render_template('manage_users.html', users=users)
+
+
+@app.route("/manage_caffs")
+def manage_caffs():
+    if check_role('Admin'):
+        caffs = CAFF.query.all()
+    else:
+        caffs = CAFF.query.filter_by(user_id=current_user.id)
+
+    return render_template('manage_caffs.html', caffs=caffs)
+
 
 
 

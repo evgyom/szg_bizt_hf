@@ -1,5 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
+    <form method="GET" action="">
+        {{ form.hidden_tag() }}
+        <div class="input-group mb-3">
+                    {{ form.search_key(class="form-control") }}
+              <div class="input-group-append">
+                    {{ form.submit(class="btn btn-outline-primary") }}
+              </div>
+        </div>
+    </form>
+
 <article class="media content-section">
     <div class="card-columns" >
             {% for item in items %}

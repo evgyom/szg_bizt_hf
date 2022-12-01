@@ -8,7 +8,7 @@ import ctypes
 
 from flask import render_template, url_for, flash, redirect, request, abort
 from caffstore import app, db, bcrypt
-from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, CommentForm, SearchForm
+from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, CommentForm, SearchForm, EditUserdataForm
 from caffstore.models import CAFF, Comment, User, Role, UserRoles
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -215,11 +215,21 @@ def edit_userdata(user_id):
         return redirect(url_for('home'))
 
     userdata = User.query.get_or_404(user_id)
-    form = RegistrationForm()
-    form.username.data = userdata.username
-    form.email.data = userdata.email
+    form = EditUserdataForm()
+    if request.method == 'GET':
+        form.username.data = userdata.username
+        form.email.data = userdata.email
+    if form.validate_on_submit():
+        userdata.username = form.username.data
+        userdata.email = form.email.data
 
-    return render_template('register.html', title='Edit Userdata', form=form)
+        if form.password.data is not None:
+            userdata.password=form.password.data
+        db.session.add(userdata)
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+
+    return render_template('edit_user.html', title='Edit Userdata', form=form)
 
     print(user_id)
     return redirect(url_for('about'))

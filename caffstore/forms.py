@@ -4,6 +4,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField, DecimalField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from caffstore.models import User
+from flask_login import current_user
 
 class UploadCAFFForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
@@ -15,6 +16,22 @@ class UploadCAFFForm(FlaskForm):
         if price.data < decimal.Decimal(0):
             raise ValidationError('Price must be positive')
 
+class EditUserdataForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=24)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('New password')
+    confirm_password = PasswordField('Confirm new password', validators=[EqualTo('password', message="Passwords must match!")])
+    submit = SubmitField('Submit')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user and user.username != username.data:
+            raise ValidationError('That username is taken. Please choose a different one.')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user and user.email != email.data:
+            raise ValidationError('That email is taken. Please choose a different one.')
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=24)])

@@ -35,7 +35,7 @@
             <div class="navbar-nav">
                 {% if current_user.is_authenticated %}
                 <a class="nav-item nav-link" href="{{ url_for('manage_caffs')}}">Manage CAFFs</a>
-                <a class="nav-item nav-link" href="{{ url_for('edit_userdata', user_id=current_user.id) }}">Edit User</a>
+                <a class="nav-item nav-link" href="{{ url_for('edit_user') }}">Edit User</a>
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
                 <a class="nav-item nav-link">Balance: <b>{{current_user.balance}}</b></a>
                 {% else %}

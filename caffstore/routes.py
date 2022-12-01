@@ -8,7 +8,8 @@ import ctypes
 
 from flask import render_template, url_for, flash, redirect, request, abort, send_from_directory
 from caffstore import app, db, bcrypt
-from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, CommentForm, SearchForm, EditUserdataForm
+from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, CommentForm, SearchForm, EditUserdataForm, \
+    EditUserdataAdminForm, EditCAFFForm
 from caffstore.models import CAFF, Comment, User, Role, UserRoles
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -190,6 +191,7 @@ def upload():
     return render_template('upload.html', title='Upload CAFF', form=form)
 
 @app.route("/caff_details/<int:caff_id>", methods=['GET', 'POST'])
+@login_required
 def caff_details(caff_id):
 
     item = CAFF.query.get_or_404(caff_id)
@@ -215,18 +217,40 @@ def buy_caff(caff_id):
         return send_from_directory(directory=caff_folder_path, path=item.CAFF_file, as_attachment=True)
 
 
+@app.route("/edit_caff/<int:caff_id>", methods=['GET', 'POST'])
+@login_required
+def edit_caff(caff_id):
+    caff = CAFF.query.get_or_404(caff_id)
+    form = EditCAFFForm()
+
+    if request.method == 'GET':
+        form.price.data = caff.price
+        form.title.data = caff.title
+
+    if form.validate_on_submit():
+        caff.price = form.price.data
+        caff.title = form.title.data
+        db.session.commit()
+
+    return render_template('edit_caff.html', title='Edit CAFF', form=form)
+
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route("/edit_userdata/<int:user_id>", methods=['GET', 'POST'])
-def edit_userdata(user_id):
-    if user_id != current_user.id and not check_role("Admin"):
-        flash("You have to be admin to access this feature", "danger")
-        return redirect(url_for('home'))
 
-    userdata = User.query.get_or_404(user_id)
+@app.route("/edit_user")
+def edit_user():
+    if check_role('Admin'):
+        return redirect(url_for('manage_users'))
+    else:
+        return redirect(url_for('edit_userdata'))
+
+@app.route("/edit_userdata", methods=['GET', 'POST'])
+@login_required
+def edit_userdata():
+    userdata = User.query.get_or_404(current_user.id)
     form = EditUserdataForm()
     if request.method == 'GET':
         form.username.data = userdata.username
@@ -235,24 +259,73 @@ def edit_userdata(user_id):
         userdata.username = form.username.data
         userdata.email = form.email.data
 
-        if form.password.data is not None:
-            userdata.password=form.password.data
+        if form.password.data:
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            userdata.password = hashed_password
+
         db.session.add(userdata)
         db.session.commit()
         flash('Profile updated successfully!', 'success')
 
     return render_template('edit_user.html', title='Edit Userdata', form=form)
 
-    print(user_id)
-    return redirect(url_for('about'))
+@app.route("/edit_userdata_admin/<int:user_id>", methods=['GET', 'POST'])
+@login_required
+def edit_userdata_admin(user_id):
+
+    if not check_role("Admin"):
+        flash("You have to be admin to access this feature", "danger")
+        return redirect(url_for('home'))
+
+    userdata = User.query.get_or_404(user_id)
+    form = EditUserdataAdminForm()
+
+    if request.method == 'GET':
+        form.username.data = userdata.username
+        form.email.data = userdata.email
+        form.balance.data = userdata.balance
+
+        role_names = map(lambda r: r.name, userdata.roles)
+        form.admin.data = ('Admin' in role_names)
+
+    if form.validate_on_submit():
+        userdata.username = form.username.data
+        userdata.email = form.email.data
+        userdata.balance = form.balance.data
+
+        admin_role_id = Role.query.filter_by(name='Admin').first_or_404().id
+
+        current_admin_role = UserRoles.query.filter_by(user_id=user_id, role_id=admin_role_id).first()
+        if current_admin_role is not None:
+            db.session.delete(current_admin_role)
+
+        if form.admin.data:
+            new_admin_role = UserRoles(user_id=userdata.id, role_id=admin_role_id)
+            db.session.add(new_admin_role)
+
+        if form.password.data:
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            userdata.password = hashed_password
+
+        db.session.add(userdata)
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+
+    return render_template('edit_user_admin.html', title='Edit Userdata', form=form)
 
 @app.route("/manage_users")
+@login_required
 def manage_users():
+    if not check_role('Admin'):
+        flash('You have to be admin to access this feature', 'danger')
+        return redirect(url_for('home'))
+
     users = User.query.all()
     return render_template('manage_users.html', users=users)
 
 
 @app.route("/manage_caffs")
+@login_required
 def manage_caffs():
     if check_role('Admin'):
         caffs = CAFF.query.all()

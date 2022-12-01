@@ -16,6 +16,16 @@ class UploadCAFFForm(FlaskForm):
         if price.data < decimal.Decimal(0):
             raise ValidationError('Price must be positive')
 
+class EditCAFFForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    price = DecimalField(places=2, rounding=decimal.ROUND_UP, validators=[DataRequired()])
+    submit = SubmitField('Upload')
+
+    def validate_price(self, price):
+        if price.data < decimal.Decimal(0):
+            raise ValidationError('Price must be positive')
+
+
 class EditUserdataForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=24)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -32,6 +42,27 @@ class EditUserdataForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user and user.email != email.data:
             raise ValidationError('That email is taken. Please choose a different one.')
+
+class EditUserdataAdminForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=24)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('New password')
+
+    balance = DecimalField(places=2, rounding=decimal.ROUND_UP)
+    admin = BooleanField('Is admin')
+
+    submit = SubmitField('Submit')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user and user.username != username.data:
+            raise ValidationError('That username is taken. Please choose a different one.')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user and user.email != email.data:
+            raise ValidationError('That email is taken. Please choose a different one.')
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=24)])
@@ -64,3 +95,4 @@ class CommentForm(FlaskForm):
 class SearchForm(FlaskForm):
     search_key = StringField('Search for a CAFF', validators=[DataRequired()], render_kw={"placeholder": "Enter CAFF name"})
     submit = SubmitField('Search')
+

@@ -6,7 +6,7 @@ import secrets
 from datetime import datetime
 import ctypes
 
-from flask import render_template, url_for, flash, redirect, request, abort
+from flask import render_template, url_for, flash, redirect, request, abort, send_from_directory
 from caffstore import app, db, bcrypt
 from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, CommentForm, SearchForm, EditUserdataForm
 from caffstore.models import CAFF, Comment, User, Role, UserRoles
@@ -201,6 +201,18 @@ def caff_details(caff_id):
         db.session.commit()
 
     return render_template('details.html', title='CAFF details', item=item, form=form)
+
+@app.route("/buy_caff/<int:caff_id>", methods=['GET', 'POST'])
+def buy_caff(caff_id):
+    item = CAFF.query.get_or_404(caff_id)
+    if current_user.balance <= item.price:
+        flash("You don't have enough money to buy this item", "danger")
+        return redirect(url_for('home'))
+    else:
+        current_user.balance = current_user.balance - item.price
+        db.session.commit()
+        caff_folder_path = os.path.join(app.root_path, 'static\\CAFF_files')
+        return send_from_directory(directory=caff_folder_path, path=item.CAFF_file, as_attachment=True)
 
 
 @app.route("/logout")

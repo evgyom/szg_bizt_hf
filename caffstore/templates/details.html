@@ -27,9 +27,31 @@
          <h3>Price: <b>{{ item.price }}</b></h3>
       </div>
       <div>
-         <button type="button" class="btn btn-primary btn-lg">Buy</button>
+         <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#buyModal">Buy</button>
       </div>
  </div>
+
+<!-- Modal -->
+<div class="modal fade" id="buyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Buy this CAFF</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Buy this item for {{item.price}} currency?
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a href="{{ url_for('buy_caff', caff_id=item.id) }}" class="btn btn-primary" role="button">Buy</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div class="mb-4 mt-4">
     <h1>Comments</h1>

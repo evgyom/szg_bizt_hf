@@ -225,7 +225,7 @@ def edit_caff(caff_id):
 
     if current_user.id != caff.user_id and not check_role('Admin'):
         flash("You have to be admin to access this feature", "danger")
-        return render_template('manage_caffs.html', caffs=caffs)
+        return render_template('manage_caffs.html', caffs=caffs, title='Manage CAFFs')
 
     form = EditCAFFForm()
 
@@ -320,7 +320,7 @@ def edit_userdata_admin(user_id):
 
     return render_template('edit_user_admin.html', title='Edit Userdata', form=form)
 
-@app.route("/create_user", methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'])
 @login_required
 def create_user():
     if not check_role('Admin'):
@@ -348,7 +348,7 @@ def manage_users():
         flash('You have to be admin to access this feature', 'danger')
         return redirect(url_for('home'))
     users = User.query.all()
-    return render_template('manage_users.html', users=users)
+    return render_template('manage_users.html', users=users, title='Manage users')
 
 @app.route("/delete_user/<int:user_id>")
 @login_required
@@ -373,13 +373,12 @@ def manage_caffs():
     else:
         caffs = CAFF.query.filter_by(user_id=current_user.id)
 
-    return render_template('manage_caffs.html', caffs=caffs)
+    return render_template('manage_caffs.html', caffs=caffs, title='Manage CAFFs')
 
 @app.route("/delete_caff/<int:caff_id>")
 @login_required
 def delete_caff(caff_id):
     caff = CAFF.query.get_or_404(caff_id)
-    caffs = CAFF.query.filter_by(user_id=current_user.id)
 
     if current_user.id != caff.user_id and not check_role('Admin'):
         flash("You have to be admin to access this feature", "danger")

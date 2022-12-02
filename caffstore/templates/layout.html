@@ -37,7 +37,7 @@
                 <a class="nav-item nav-link" href="{{ url_for('manage_caffs')}}">Manage CAFFs</a>
                 <a class="nav-item nav-link" href="{{ url_for('edit_user') }}">Edit User</a>
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
-                <a class="nav-item nav-link">Balance: <b>{{current_user.balance}}</b></a>
+                <a class="nav-item nav-link ">Balance: <b>{{current_user.balance}}</b></a>
                 {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
                 <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>

@@ -70,6 +70,7 @@ class CreateUserForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     balance = DecimalField(places=2, rounding=decimal.ROUND_UP, default=0)
+    submit = SubmitField('Create')
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()

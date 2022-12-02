@@ -221,6 +221,12 @@ def buy_caff(caff_id):
 @login_required
 def edit_caff(caff_id):
     caff = CAFF.query.get_or_404(caff_id)
+    caffs = CAFF.query.filter_by(user_id=current_user.id)
+
+    if current_user.id != caff.user_id and not check_role('Admin'):
+        flash("You have to be admin to access this feature", "danger")
+        return render_template('manage_caffs.html', caffs=caffs)
+
     form = EditCAFFForm()
 
     if request.method == 'GET':
@@ -350,7 +356,19 @@ def manage_caffs():
 
     return render_template('manage_caffs.html', caffs=caffs)
 
+@app.route("/delete_caff/<int:caff_id>")
+@login_required
+def delete_caff(caff_id):
+    if not check_role("Admin"):
+        flash("You have to be admin to access this feature", "danger")
+        return redirect(url_for('home'))
+    Comment.query.filter_by(CAFF_id=caff_id).delete()
+    CAFF.query.filter_by(id=caff_id).delete()
+    db.session.commit()
 
+    flash("User deleted.", 'success')
+    users = User.query.all()
+    return render_template('manage_users.html', users=users)
 
 
 

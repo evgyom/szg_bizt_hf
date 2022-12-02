@@ -25,7 +25,10 @@
         <td>{{caff.creator_name}}</td>
         <td>{{caff.creation_date.strftime('%Y-%m-%d')}}</td>
         <td>{{caff.price}}</td>
-        <td><a href="{{ url_for('edit_caff', caff_id=caff.id) }}" class="btn btn-primary btn-sm" role="button">Edit</a></td>
+        <td>
+            <a href="{{ url_for('edit_caff', caff_id=caff.id) }}" class="btn btn-primary btn-sm" role="button">Edit</a>
+            <a href="{{ url_for('delete_caff', caff_id=caff.id) }}" class="btn btn-primary btn-sm" role="button">Delete</a>
+        </td>
 
     </tr>
   {% endfor %}

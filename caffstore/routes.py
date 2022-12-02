@@ -82,7 +82,7 @@ def register():
         db.session.commit()
 
         flash('Your account has been created! You are now able to log in', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
 
     return render_template('register.html', title='Register', form=form)
 
@@ -231,13 +231,14 @@ def edit_caff(caff_id):
         caff.price = form.price.data
         caff.title = form.title.data
         db.session.commit()
+        flash('CAFF data updated successfully!', 'success')
 
     return render_template('edit_caff.html', title='Edit CAFF', form=form)
 
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 
 @app.route("/edit_user")
@@ -323,6 +324,21 @@ def manage_users():
     users = User.query.all()
     return render_template('manage_users.html', users=users)
 
+@app.route("/delete_user/<int:user_id>")
+@login_required
+def delete_user(user_id):
+    if not check_role("Admin"):
+        flash("You have to be admin to access this feature", "danger")
+        return redirect(url_for('home'))
+    Comment.query.filter_by(user_id=user_id).delete()
+    CAFF.query.filter_by(user_id=user_id).delete()
+    UserRoles.query.filter_by(user_id=user_id).delete()
+    User.query.filter_by(id=user_id).delete()
+    db.session.commit()
+
+    flash("User deleted.", 'success')
+    users = User.query.all()
+    return render_template('manage_users.html', users=users)
 
 @app.route("/manage_caffs")
 @login_required

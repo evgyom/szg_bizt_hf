@@ -19,7 +19,7 @@ class UploadCAFFForm(FlaskForm):
 class EditCAFFForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     price = DecimalField(places=2, rounding=decimal.ROUND_UP, validators=[DataRequired()])
-    submit = SubmitField('Upload')
+    submit = SubmitField('Update CAFF')
 
     def validate_price(self, price):
         if price.data < decimal.Decimal(0):

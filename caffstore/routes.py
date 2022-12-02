@@ -9,7 +9,7 @@ import ctypes
 from flask import render_template, url_for, flash, redirect, request, abort, send_from_directory
 from caffstore import app, db, bcrypt
 from caffstore.forms import UploadCAFFForm, RegistrationForm, LoginForm, CommentForm, SearchForm, EditUserdataForm, \
-    EditUserdataAdminForm, EditCAFFForm
+    EditUserdataAdminForm, EditCAFFForm, CreateUserForm
 from caffstore.models import CAFF, Comment, User, Role, UserRoles
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -320,13 +320,33 @@ def edit_userdata_admin(user_id):
 
     return render_template('edit_user_admin.html', title='Edit Userdata', form=form)
 
+@app.route("/create_user", methods=['GET', 'POST'])
+@login_required
+def create_user():
+    if not check_role('Admin'):
+        flash('You have to be admin to access this feature', 'danger')
+        return redirect(url_for('home'))
+    form = CreateUserForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, balance=form.balance.data)
+        db.session.add(user)
+
+        role = Role.query.filter_by(name='User').first_or_404()
+        user_role = UserRoles(user_id=user.id, role_id=role.id)
+        db.session.add(user_role)
+        db.session.commit()
+
+        flash('The account has been created!', 'success')
+
+    return render_template('create_user.html', title='Create User', form=form)
+
 @app.route("/manage_users")
 @login_required
 def manage_users():
     if not check_role('Admin'):
         flash('You have to be admin to access this feature', 'danger')
         return redirect(url_for('home'))
-
     users = User.query.all()
     return render_template('manage_users.html', users=users)
 

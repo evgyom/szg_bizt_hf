@@ -32,6 +32,7 @@ class EditUserdataForm(FlaskForm):
     password = PasswordField('New password')
     confirm_password = PasswordField('Confirm new password', validators=[EqualTo('password', message="Passwords must match!")])
     submit = SubmitField('Submit')
+    delete = SubmitField('Delete Account')
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
@@ -69,7 +70,6 @@ class CreateUserForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     balance = DecimalField(places=2, rounding=decimal.ROUND_UP, default=0)
-    submit = SubmitField('Create')
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()

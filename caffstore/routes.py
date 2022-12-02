@@ -353,7 +353,7 @@ def manage_users():
 @app.route("/delete_user/<int:user_id>")
 @login_required
 def delete_user(user_id):
-    if not check_role("Admin"):
+    if not check_role("Admin") and current_user.id != user_id:
         flash("You have to be admin to access this feature", "danger")
         return redirect(url_for('home'))
     Comment.query.filter_by(user_id=user_id).delete()
@@ -362,9 +362,8 @@ def delete_user(user_id):
     User.query.filter_by(id=user_id).delete()
     db.session.commit()
 
-    flash("User deleted.", 'success')
-    users = User.query.all()
-    return render_template('manage_users.html', users=users)
+    flash("User account deleted.", 'success')
+    return redirect(url_for('manage_users'))
 
 @app.route("/manage_caffs")
 @login_required

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="store" uuid="2e37306e-f122-4340-bbe6-40c0f65ebc11">
+    <data-source source="LOCAL" name="store [2]" uuid="2d56d6bd-8ff5-4f70-a2c7-d0bf2fa3f3ac">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\extra\PycharmProjects\flaskProject\instance\store.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\Mate\PycharmProjects\szg_bizt_hf\instance\store.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

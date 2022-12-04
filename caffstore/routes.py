@@ -54,9 +54,12 @@ def check_role(role_name):
 def home():
     form = SearchForm(request.args)
     if form.validate():
-        #print(form.search_key.data)
-        caffs = CAFF.query.filter_by(title=form.search_key.data)
-        if caffs.count() == 0:
+        #caffs = CAFF.query.filter_by(title=form.search_key.data)
+        search = "%{}%".format(form.search_key.data)
+        caffs = CAFF.query.filter(CAFF.title.like(search)).all()
+        #print(caffs)
+
+        if len(caffs) == 0:
             flash("No caffs found with the given name", "danger")
     else:
         caffs = CAFF.query.all()
@@ -104,8 +107,7 @@ def login():
     if form.validate_on_submit():
         login_success = do_login(form.email.data, form.password.data, form.remember.data)
         if login_success:
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -219,9 +221,14 @@ def buy_caff(caff_id):
         flash("You don't have enough money to buy this item", "danger")
         return redirect(url_for('home'))
     else:
+        caff_path = os.path.join(app.root_path, 'static\\CAFF_files', item.CAFF_file)
+        if not os.path.isfile(caff_path):
+            flash("The requested file does not exist", "danger")
+            return redirect(url_for('home'))
+
+        caff_folder_path = os.path.join(app.root_path, 'static\\CAFF_files')
         current_user.balance = current_user.balance - item.price
         db.session.commit()
-        caff_folder_path = os.path.join(app.root_path, 'static\\CAFF_files')
         return send_from_directory(directory=caff_folder_path, path=item.CAFF_file, as_attachment=True)
 
 

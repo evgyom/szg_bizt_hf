@@ -16,12 +16,20 @@
                 <div class="card">
                   <img src="{{ url_for('static', filename='Preview_files/' + item.preview_file )}}" class="card-img-top"
                     alt="CAFF preview" />
-                  <div class="card-body">
-                      <h5><a class="card-title" href="{{ url_for('caff_details', caff_id=item.id) }}">{{ item.title }}</a></h5>
-                      <p class="card-text">{{ item.creator_name }}</p>
-                      <p class="card-text">{{ item.creation_date.strftime('%Y-%m-%d') }}</p>
-                      <p class="card-text">{{ item.duration }}</p>
-                  </div>
+                      <div class="card-body">
+                          <div class="mb-2">
+                          <h3><a class="card-title" href="{{ url_for('caff_details', caff_id=item.id) }}">{{ item.title }}</a></h3>
+                          <h5>by: <b>{{ item.uploader.username }}</b></h5>
+                          <ul class="list-group list-unstyled">
+                              <li class="card-text">Creator: <b>{{ item.creator_name }}</b></li>
+                              <li class="card-text">Creation date: <b>{{item.creation_date.strftime('%Y-%m-%d')}}</b></li>
+                              <li class="card-text">Tags: <b>{{item.tags}}</b></li>
+                          </ul>
+                      </div>
+                        <div>
+                          <h5>Price: <b>{{ item.price }}</b></h5>
+                        </div>
+                      </div>
                 </div>
             {% endfor %}
     </div>

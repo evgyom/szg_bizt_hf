@@ -335,7 +335,7 @@ def edit_userdata_admin(user_id):
 
     return render_template('edit_user_admin.html', title='Edit Userdata', form=form)
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/create_user", methods=['GET', 'POST'])
 @login_required
 def create_user():
     if not check_role('Admin'):

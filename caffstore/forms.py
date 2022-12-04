@@ -127,7 +127,8 @@ class Validators():
             message += 'The password must contain at least 1 uppercase letter! '
         if d == 0:
             message += 'The password must contain at least 1 digit! '
-        raise ValidationError(message)
+        if message != "":
+            raise ValidationError(message)
 
     def validate_username(username):
         user = User.query.filter_by(username=username).first()

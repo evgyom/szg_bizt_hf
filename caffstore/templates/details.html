@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="text-center mb-4">
+       <img src="{{ url_for('static', filename='Preview_files/' + item.preview_file )}}" class="img-fluid rounded" alt="CAFF preview">
+   </div>
+
+   <div class="mb-3">
+       <h1><b>{{ item.title }}</b></h1>
+       <h3>by: <b>{{ item.uploader.username }}</b></h3>
+   </div>
+
+<div class="card mb-4">
+  <div class="card-header">
+    Details
+  </div>
+  <ul class="list-group list-group-flush">
+      <li class="list-group-item">Creator: <b>{{item.creator_name}}</b></li>
+      <li class="list-group-item">Creation date: <b>{{item.creation_date.strftime('%Y-%m-%d')}}</b></li>
+      <li class="list-group-item">Captions: <b>{{item.captions}}</b></li>
+      <li class="list-group-item">Tags: <b>{{item.tags}}</b></li>
+      <li class="list-group-item">Duration: <b>{{item.duration}}</b></li>
+  </ul>
+</div>
+
+<div class="d-flex justify-content-between ">
+      <div>
+         <h3>Price: <b>{{ item.price }}</b></h3>
+      </div>
+      <div>
+         <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#buyModal">Buy</button>
+      </div>
+ </div>
+
+<!-- Modal -->
+<div class="modal fade" id="buyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Buy this CAFF</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Buy this item for {{item.price}} currency?
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a href="{{ url_for('buy_caff', caff_id=item.id) }}" class="btn btn-primary" role="button">Buy</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="mb-4 mt-4">
+    <h1>Comments</h1>
+</div>
+
+    <div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <div class="form-group">
+                    {{ form.content.label(class="form-control-label") }}
+                    {% if form.content.errors %}
+                        {{ form.content(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.content.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.content(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+
+        <br>
+        {% for comment in item.comments %}
+            <div class="card mb-4">
+              <div class="card-header">
+                  {{ comment.author.username }}
+              </div>
+              <div class="card-body">
+                  <p>{{ comment.content }}</p>
+                  <footer class="blockquote-footer">{{ comment.date_posted.strftime('%Y-%m-%d') }}</footer>
+              </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+{% endblock content %}

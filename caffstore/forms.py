@@ -6,7 +6,6 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from caffstore.models import User
 from flask_login import current_user
 
-
 class UploadCAFFForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     price = DecimalField(places=2, rounding=decimal.ROUND_UP, validators=[DataRequired()])
@@ -14,8 +13,7 @@ class UploadCAFFForm(FlaskForm):
     submit = SubmitField('Upload')
 
     def validate_price(self, price):
-        if price.data < decimal.Decimal(0):
-            raise ValidationError('Price must be positive')
+        Validators.validate_price(price.data)
 
 class EditCAFFForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
@@ -23,8 +21,7 @@ class EditCAFFForm(FlaskForm):
     submit = SubmitField('Update CAFF')
 
     def validate_price(self, price):
-        if price.data < decimal.Decimal(0):
-            raise ValidationError('Price must be positive')
+        Validators.validate_price(price.data)
 
 
 class EditUserdataForm(FlaskForm):
@@ -36,36 +33,13 @@ class EditUserdataForm(FlaskForm):
     delete = SubmitField('Delete Account')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user and user.username != username.data:
-            raise ValidationError('That username is taken. Please choose a different one.')
+        Validators.validate_username(username.data)
 
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user and user.email != email.data:
-            raise ValidationError('That email is taken. Please choose a different one.')
+        Validators.validate_email(email.data)
 
     def validate_password(self, password):
-        l, u, d = 0, 0, 0
-        pw = password.data
-        message = ""
-        if len(pw) < 6 or len(pw) > 20:
-            message += 'The password must be between 6 and 20 characters long! '
-        for c in pw:
-            if c.islower():
-                l += 1
-            if c.isupper():
-                u += 1
-            if c.isdigit():
-                d += 1
-        if l == 0:
-            message += 'The password must contain at least 1 lowercase letter! '
-        if u == 0:
-            message += 'The password must contain at least 1 uppercase letter! '
-        if d == 0:
-            message += 'The password must contain at least 1 digit! '
-        if message != "":
-            raise ValidationError(message)
+        Validators.validate_password(password.data)
 
 class EditUserdataAdminForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=24)])
@@ -78,36 +52,13 @@ class EditUserdataAdminForm(FlaskForm):
     submit = SubmitField('Submit')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user and user.username != username.data:
-            raise ValidationError('That username is taken. Please choose a different one.')
+        Validators.validate_username(username.data)
 
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user and user.email != email.data:
-            raise ValidationError('That email is taken. Please choose a different one.')
+        Validators.validate_email(email.data)
 
     def validate_password(self, password):
-        l, u, d = 0, 0, 0
-        pw = password.data
-        message = ""
-        if len(pw) < 6 or len(pw) > 20:
-            message += 'The password must be between 6 and 20 characters long! '
-        for c in pw:
-            if c.islower():
-                l += 1
-            if c.isupper():
-                u += 1
-            if c.isdigit():
-                d += 1
-        if l == 0:
-            message += 'The password must contain at least 1 lowercase letter! '
-        if u == 0:
-            message += 'The password must contain at least 1 uppercase letter! '
-        if d == 0:
-            message += 'The password must contain at least 1 digit! '
-        if message != "":
-            raise ValidationError(message)
+        Validators.validate_password(password.data)
 
 class CreateUserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=24)])
@@ -118,36 +69,13 @@ class CreateUserForm(FlaskForm):
     submit = SubmitField('Create')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('That username is taken. Please choose a different one.')
+        Validators.validate_username(username.data)
 
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user:
-            raise ValidationError('That email is taken. Please choose a different one.')
+        Validators.validate_email(email.data)
 
     def validate_password(self, password):
-        l, u, d = 0, 0, 0
-        pw = password.data
-        message = ""
-        if len(pw) < 6 or len(pw) > 20:
-            message += 'The password must be between 6 and 20 characters long! '
-        for c in pw:
-            if c.islower():
-                l += 1
-            if c.isupper():
-                u += 1
-            if c.isdigit():
-                d += 1
-        if l == 0:
-            message += 'The password must contain at least 1 lowercase letter! '
-        if u == 0:
-            message += 'The password must contain at least 1 uppercase letter! '
-        if d == 0:
-            message += 'The password must contain at least 1 digit! '
-        if message != "":
-            raise ValidationError(message)
+        Validators.validate_password(password.data)
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=24)])
@@ -157,36 +85,13 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('That username is taken. Please choose a different one.')
+        Validators.validate_username(username.data)
 
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user:
-            raise ValidationError('That email is taken. Please choose a different one.')
+        Validators.validate_email(email.data)
 
     def validate_password(self, password):
-        l, u, d = 0, 0, 0
-        pw = password.data
-        message = ""
-        if len(pw) < 6 or len(pw) > 20:
-            message += 'The password must be between 6 and 20 characters long! '
-        for c in pw:
-            if c.islower():
-                l += 1
-            if c.isupper():
-                u += 1
-            if c.isdigit():
-                d += 1
-        if l == 0:
-            message += 'The password must contain at least 1 lowercase letter! '
-        if u == 0:
-            message += 'The password must contain at least 1 uppercase letter! '
-        if d == 0:
-            message += 'The password must contain at least 1 digit! '
-        if message != "":
-            raise ValidationError(message)
+        Validators.validate_password(password.data)
 
 class LoginForm(FlaskForm):
     email = StringField('Email',
@@ -203,3 +108,37 @@ class SearchForm(FlaskForm):
     search_key = StringField('Search for a CAFF', validators=[DataRequired()], render_kw={"placeholder": "Enter CAFF name"})
     submit = SubmitField('Search')
 
+class Validators():
+    def validate_password(pw):
+        l, u, d = 0, 0, 0
+        message = ""
+        if len(pw) < 6 or len(pw) > 20:
+            message += 'The password must be between 6 and 20 characters long! '
+        for c in pw:
+            if c.islower():
+                l += 1
+            if c.isupper():
+                u += 1
+            if c.isdigit():
+                d += 1
+        if l == 0:
+            message += 'The password must contain at least 1 lowercase letter! '
+        if u == 0:
+            message += 'The password must contain at least 1 uppercase letter! '
+        if d == 0:
+            message += 'The password must contain at least 1 digit! '
+        raise ValidationError(message)
+
+    def validate_username(username):
+        user = User.query.filter_by(username=username).first()
+        if user:
+            raise ValidationError('That username is taken. Please choose a different one.')
+
+    def validate_email(email):
+        user = User.query.filter_by(email=email).first()
+        if user:
+            raise ValidationError('That email is taken. Please choose a different one.')
+
+    def validate_price(price):
+        if price.data < decimal.Decimal(0):
+            raise ValidationError('Price must be positive')
